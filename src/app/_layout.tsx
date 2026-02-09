@@ -1,6 +1,7 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import '../i18n'; // Initialize i18n before app renders
 
 /**
  * RootLayout component that defines the main layout of the application.

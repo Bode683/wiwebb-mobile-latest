@@ -5,7 +5,11 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@i18n": ["./src/i18n/index.ts"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@mmkv": ["./src/mmkv/index.ts"],
+      "@mmkv/*": ["./src/mmkv/*"]
     }
   },
   "include": [
