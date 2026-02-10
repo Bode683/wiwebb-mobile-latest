@@ -1,50 +1,45 @@
-# Welcome to your Expo app 👋
+# wiwebb
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+React Native app built with Expo SDK 54, New Architecture, and file-based routing via expo-router.
 
-## Get started
+## Stack
 
-1. Install dependencies
+| Layer | Library |
+|---|---|
+| Navigation | expo-router v6 (drawer → tabs → stack) |
+| State | Redux Toolkit 2 + redux-persist |
+| Storage | react-native-mmkv v4 |
+| i18n | i18next v25 + react-i18next v16 |
+| Theme | Custom `src/theme/` (amber, MD3 tokens, Reanimated springs) |
+| UI | react-native-paper + react-native-reanimated 4 |
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Getting started
 
 ```bash
-npm run reset-project
+npm install
+npx expo run:android   # or run:ios  (native build required for MMKV)
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+> `npx expo start` (Expo Go) will not work — MMKV requires a native build.
 
-## Learn more
+## Project structure
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+src/
+├── app/          # File-based routes (expo-router)
+│   ├── (auth)/   # Login, sign-up, welcome
+│   └── (drawer)/ # Main app: tabs + settings + explore
+├── components/   # TabBar, DrawerContent
+├── theme/        # Colors, typography, spacing, animations, ThemeProvider
+├── store/        # Redux store, slices, typed hooks
+├── i18n/         # Config + EN/FR locale files
+└── mmkv/         # Shared MMKV instance
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Languages
 
-## Join the community
+English (`en`) and French (`fr`). Locale files in `src/i18n/locales/{en,fr}/`.
 
-Join our community of developers creating universal apps.
+## Docs
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+See `CLAUDE.md` for i18n usage rules, Redux patterns, theme API, and known fixes.
