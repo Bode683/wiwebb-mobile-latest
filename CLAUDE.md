@@ -26,7 +26,7 @@ Expo Router app with i18n (react-i18next) and MMKV storage.
 
 **What didn't work:** Adding `@ts-ignore`, checking autolinking, version pinning.
 
-**Fix:** Use the new v4 API:
+**Fix:** Use the new v4 API everywhere MMKV is instantiated (app storage, redux-persist storage, etc.):
 ```ts
 // Before (v3)
 import { MMKV } from 'react-native-mmkv';
