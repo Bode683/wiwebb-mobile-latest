@@ -1,0 +1,27 @@
+{
+  "homepage": {
+    "welcome": "Merci d'utiliser React Native Starter App\n😍 😘 🙏🏻",
+    "releasedWithLove": "Créé et publié avec ❤️ pour vous",
+    "gotoUsersList": "Voir la liste des utilisateurs",
+    "openModal": "Ouvrir la fenêtre",
+    "createNewUser": "Créer un nouvel utilisateur",
+    "modifyUser": "Modifier l'utilisateur",
+    "deleteUser": "Supprimer l'utilisateur",
+    "userCreated": "Utilisateur créé !",
+    "userNotCreated": "Erreur ! Utilisateur non créé !",
+    "userModified": "Utilisateur modifié",
+    "userNotModified": "Erreur ! Utilisateur non modifié",
+    "userDeleted": "Utilisateur supprimé",
+    "userNotDeleted": "Erreur ! Utilisateur non supprimé"
+  },
+  "usersList": {
+    "title": "Liste des utilisateurs"
+  },
+  "modal": {
+    "title": "Fenêtre modale",
+    "description": "Ceci est une fenêtre modale !"
+  },
+  "userDetails": {
+    "title": "Détails de l'utilisateur"
+  }
+}

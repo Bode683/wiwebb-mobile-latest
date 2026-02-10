@@ -9,7 +9,7 @@ const HomeScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{t('Homepage:welcome')}</Text>
+            <Text style={styles.title}>{t('Home:homepage.welcome')}</Text>
 
             <Text style={styles.currentLang}>
                 Current language: {i18n.language}
@@ -17,12 +17,12 @@ const HomeScreen = () => {
 
             <View style={styles.buttonContainer}>
                 <Button
-                    title={`Switch to ${t('common:italian')}`}
-                    onPress={() => i18n.changeLanguage('it')}
+                    title={`Switch to ${t('common:language.french')}`}
+                    onPress={() => i18n.changeLanguage('fr')}
                 />
 
                 <Button
-                    title={`Switch to ${t('common:english')}`}
+                    title={`Switch to ${t('common:language.english')}`}
                     onPress={() => i18n.changeLanguage('en')}
                 />
 
