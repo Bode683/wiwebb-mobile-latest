@@ -1,6 +1,8 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { Provider } from 'react-redux';
+import { store } from '../store';
 import '../i18n'; // Initialize i18n before app renders
 
 /**
@@ -9,10 +11,10 @@ import '../i18n'; // Initialize i18n before app renders
  */
 const RootLayout = () => {
   return (
-    <>
+    <Provider store={store}>
       {/* StatusBar configuration */}
       <StatusBar style="auto" />
-      
+
       {/* Stack navigator configuration */}
       <Stack
         screenOptions={{
@@ -20,24 +22,24 @@ const RootLayout = () => {
         }}
       >
         {/* Auth Stack */}
-        <Stack.Screen 
-          name="(auth)" 
-          options={{ 
+        <Stack.Screen
+          name="(auth)"
+          options={{
             headerShown: false, // Hide header for auth screens
             //gestureEnabled: false // Uncomment to disable swipe gestures for auth screens
-          }} 
+          }}
         />
-        
+
         {/* Tabs Stack */}
-        <Stack.Screen 
-          name="(tabs)" 
-          options={{ 
+        <Stack.Screen
+          name="(tabs)"
+          options={{
             headerShown: false, // Hide header for tab screens
             gestureEnabled: false // Disable swipe gestures for tab screens
-          }} 
+          }}
         />
       </Stack>
-    </>
+    </Provider>
   );
 };
 

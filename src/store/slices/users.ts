@@ -3,7 +3,7 @@ import {
   createEntityAdapter,
   createSlice,
 } from '@reduxjs/toolkit';
-import { RootState } from '.';
+import { RootState } from '../index';
 
 interface UserData {
   id: number;
