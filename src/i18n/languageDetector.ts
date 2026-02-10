@@ -9,7 +9,7 @@ const noop = (): void => {
 };
 
 const RNLanguageDetector = {
-  type: 'languageDetector',
+  type: 'languageDetector' as const,
   async: true,
   detect: (cb: (detectedLocale: string) => void): void => {
     try {
