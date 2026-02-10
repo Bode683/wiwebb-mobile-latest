@@ -9,13 +9,66 @@ Expo Router app with i18n (react-i18next) and MMKV storage.
 - react-native-mmkv v4 + react-native-nitro-modules v0.33+
 - i18next v25 + react-i18next v16
 
-## i18n Setup
+## i18n
 
 - Config: `src/i18n/index.ts`
 - Language detector (uses MMKV to persist): `src/i18n/languageDetector.ts`
-- Locale files: `src/i18n/locales/en.json`, `it.json`
+- Locale files: `src/i18n/locales/{en,fr}/{common,onboarding,Home}.json`
 - MMKV instance: `src/mmkv/index.ts`
 - Initialized in: `src/app/_layout.tsx` via `import '../i18n'`
+- Languages: `en` (default), `fr`
+
+### Usage
+
+**Rule:** Always pass the namespace to `useTranslation()` and use bare keys — never the `namespace:key` prefix form.
+
+```ts
+// ✅ Correct
+const { t } = useTranslation('Home');
+t('homepage.welcome')
+t('usersList.title')
+
+// ❌ Avoid
+const { t } = useTranslation();
+t('Home:homepage.welcome')
+```
+
+---
+
+## Redux
+
+- Store: `src/store/index.ts`
+- Typed hooks: `src/store/hooks.ts`
+- Slices: `src/store/slices/{message,users,colors}.ts`
+- Persistence: `redux-persist` + MMKV adapter at `src/store/storage.ts`
+- `Provider` + `PersistGate` in `src/app/_layout.tsx`
+
+### Persisted slices
+Only `message` is persisted. `users` re-fetches on mount; `colorsApi` is managed by RTK Query.
+
+### Usage
+
+```ts
+import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
+import { setMessage } from '@/src/store/slices/message';
+import { useGetColorsQuery } from '@/src/store/slices/colors';
+import { fetchUsers, selectAllUsers } from '@/src/store/slices/users';
+
+// Read state
+const { message } = useAppSelector(state => state.message);
+
+// Dispatch action
+const dispatch = useAppDispatch();
+dispatch(setMessage('hello'));
+
+// RTK Query
+const { data, isFetching, error } = useGetColorsQuery();
+```
+
+### Adding a new slice
+1. Create `src/store/slices/mySlice.ts` using `createSlice`
+2. Add its reducer to `combineReducers` in `src/store/index.ts`
+3. Add to `whitelist` in `persistConfig` only if it needs persistence
 
 ---
 

@@ -32,12 +32,12 @@ const RootLayout = () => {
           }}
         />
 
-        {/* Tabs Stack */}
+        {/* Drawer — wraps all main app screens */}
         <Stack.Screen
-          name="(tabs)"
+          name="(drawer)"
           options={{
-            headerShown: false, // Hide header for tab screens
-            gestureEnabled: false // Disable swipe gestures for tab screens
+            headerShown: false,
+            gestureEnabled: false,
           }}
         />
       </Stack>

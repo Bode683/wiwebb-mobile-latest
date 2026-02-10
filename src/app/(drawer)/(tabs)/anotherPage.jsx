@@ -12,7 +12,7 @@ const AnotherPage = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Another Page</Text>
       {/* The onPress handler below uses router.replace('/(auth)/welcome') to navigate to the welcome page and replace the current route. This is important because:
-          Using replace instead of push ensures that the current 'anotherPage' page is removed from the navigation stack. 
+          Using replace instead of push ensures that the current 'anotherPage' page is removed from the navigation stack.
           This prevents the user from being able to navigate back to this page using the back button, which is a common behavior after a successful logout.
           It provides a smoother (and more secure) user experience by preventing unnecessary navigation back to a post-auth page after logout. */}
 
