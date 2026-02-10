@@ -2,47 +2,48 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-nati
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from '../assets/icons';
+import { useTheme } from '../theme';
 
 const { height } = Dimensions.get('window');
-
-// Helper function to calculate height percentage
-const hp = (percentage) => {
-  return (height * percentage) / 100;
-};
+const hp = (percentage) => (height * percentage) / 100;
 
 /**
- * TabBar component renders a custom tab bar for navigation.
- * The drawer hamburger button lives in the top header (Drawer.Screen headerLeft),
- * not here — this component is bottom tabs only.
- *
- * @param {Object} props - The component props.
- * @param {Object} props.state - The navigation state object.
- * @param {Array} props.state.routes - The array of route objects.
- * @param {number} props.state.index - The index of the currently focused route.
- * @param {Object} props.descriptors - The descriptors for the routes.
- * @param {Object} props.navigation - The navigation object.
- *
- * @returns {JSX.Element} The rendered TabBar component.
+ * TabBar component renders a custom bottom tab bar.
+ * Colours are driven by the active theme so it responds to light/dark mode.
  */
 const TabBar = ({ state, descriptors, navigation }) => {
   const { bottom } = useSafeAreaInsets();
+  const { theme } = useTheme();
+
   const icons = {
-    home: (props) => <Icon name="home" size={hp(2.5)} color={'black'} {...props} />,
-    anotherPage: (props) => <Icon name="heart" size={hp(2.5)} color={'black'} {...props} />,
-    thirdPage: (props) => <Icon name="camera" size={hp(2.5)} color={'black'} {...props} />,
+    home:        (props) => <Icon name="home"   size={hp(2.5)} {...props} />,
+    anotherPage: (props) => <Icon name="heart"  size={hp(2.5)} {...props} />,
+    thirdPage:   (props) => <Icon name="camera" size={hp(2.5)} {...props} />,
   };
 
   return (
-    <View style={[styles.tabbar, { paddingBottom: bottom, height: 60 + bottom }]}>
+    <View
+      style={[
+        styles.tabbar,
+        {
+          backgroundColor: theme.sidebar,
+          borderTopColor:  theme.outline,
+          paddingBottom:   bottom,
+          height:          60 + bottom,
+        },
+      ]}
+    >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label = options.tabBarLabel !== undefined
-          ? options.tabBarLabel
-          : options.title !== undefined
-            ? options.title
-            : route.name;
+        const label =
+          options.tabBarLabel !== undefined
+            ? options.tabBarLabel
+            : options.title !== undefined
+              ? options.title
+              : route.name;
 
         const isFocused = state.index === index;
+        const color = isFocused ? theme.sidebarPrimary : theme.onSurfaceVariant;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -50,7 +51,6 @@ const TabBar = ({ state, descriptors, navigation }) => {
             target: route.key,
             canPreventDefault: true,
           });
-
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name, route.params);
           }
@@ -62,10 +62,8 @@ const TabBar = ({ state, descriptors, navigation }) => {
             onPress={onPress}
             style={styles.tab}
           >
-            {icons[route.name] && icons[route.name]({ focused: isFocused })}
-            <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
-              {label}
-            </Text>
+            {icons[route.name] && icons[route.name]({ color, focused: isFocused })}
+            <Text style={[styles.label, { color }]}>{label}</Text>
           </TouchableOpacity>
         );
       })}
@@ -76,15 +74,18 @@ const TabBar = ({ state, descriptors, navigation }) => {
 const styles = StyleSheet.create({
   tabbar: {
     flexDirection: 'row',
-    height: 60,
     borderTopWidth: 1,
-    borderTopColor: '#ccc',
-    backgroundColor: '#fff',
   },
   tab: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 3,
+  },
+  label: {
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: 0.3,
   },
 });
 

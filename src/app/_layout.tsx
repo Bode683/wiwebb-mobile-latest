@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../store';
+import { ThemeProvider } from '../theme';
 import '../i18n'; // Initialize i18n before app renders
 
 /**
@@ -14,6 +15,7 @@ const RootLayout = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+      <ThemeProvider>
       {/* StatusBar configuration */}
       <StatusBar style="auto" />
 
@@ -41,6 +43,7 @@ const RootLayout = () => {
           }}
         />
       </Stack>
+      </ThemeProvider>
       </PersistGate>
     </Provider>
   );

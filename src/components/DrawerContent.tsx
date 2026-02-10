@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import { useRouter, usePathname } from 'expo-router';
+import { useTheme } from '../theme';
 
 // ─── Accordion section with nested sub-items ─────────────────────────────────
 
@@ -24,6 +20,7 @@ type AccordionSectionProps = {
 
 const AccordionSection = ({ label, items, activePath }: AccordionSectionProps) => {
   const router = useRouter();
+  const { theme } = useTheme();
   const [open, setOpen] = useState(false);
 
   const isActive = items.some(item => activePath.startsWith(item.path));
@@ -31,14 +28,25 @@ const AccordionSection = ({ label, items, activePath }: AccordionSectionProps) =
   return (
     <View>
       <TouchableOpacity
-        style={[styles.accordionHeader, isActive && styles.accordionHeaderActive]}
+        style={[
+          styles.accordionHeader,
+          isActive && { backgroundColor: theme.sidebarAccent },
+        ]}
         onPress={() => setOpen(prev => !prev)}
         activeOpacity={0.7}
       >
-        <Text style={[styles.accordionLabel, isActive && styles.accordionLabelActive]}>
+        <Text
+          style={[
+            styles.accordionLabel,
+            { color: theme.sidebarForeground },
+            isActive && { color: theme.sidebarAccentForeground, fontWeight: '600' },
+          ]}
+        >
           {label}
         </Text>
-        <Text style={styles.accordionChevron}>{open ? '▲' : '▼'}</Text>
+        <Text style={[styles.accordionChevron, { color: theme.onSurfaceVariant }]}>
+          {open ? '▲' : '▼'}
+        </Text>
       </TouchableOpacity>
 
       {open && (
@@ -48,11 +56,20 @@ const AccordionSection = ({ label, items, activePath }: AccordionSectionProps) =
             return (
               <TouchableOpacity
                 key={item.path}
-                style={[styles.subItem, active && styles.subItemActive]}
+                style={[
+                  styles.subItem,
+                  active && { backgroundColor: theme.sidebarAccent },
+                ]}
                 onPress={() => router.push(item.path as any)}
                 activeOpacity={0.7}
               >
-                <Text style={[styles.subItemLabel, active && styles.subItemLabelActive]}>
+                <Text
+                  style={[
+                    styles.subItemLabel,
+                    { color: theme.onSurfaceVariant },
+                    active && { color: theme.sidebarAccentForeground, fontWeight: '600' },
+                  ]}
+                >
                   {item.label}
                 </Text>
               </TouchableOpacity>
@@ -69,26 +86,30 @@ const AccordionSection = ({ label, items, activePath }: AccordionSectionProps) =
 export default function DrawerContent(props: DrawerContentComponentProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { theme } = useTheme();
 
   return (
     <DrawerContentScrollView
       {...props}
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[styles.container, { backgroundColor: theme.sidebar }]}
     >
-      {/* App header */}
+      {/* App name */}
       <View style={styles.header}>
-        <Text style={styles.appName}>wiwebb</Text>
+        <Text style={[styles.appName, { color: theme.sidebarPrimary }]}>wiwebb</Text>
       </View>
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: theme.sidebarBorder }]} />
 
-      {/* Home — navigates into the tabs group */}
+      {/* Home */}
       <DrawerItem
         label="Home"
         focused={pathname.includes('/(tabs)') || pathname === '/'}
         onPress={() => router.push('/(tabs)/home')}
         style={styles.drawerItem}
         labelStyle={styles.drawerLabel}
+        activeTintColor={theme.sidebarPrimary}
+        inactiveTintColor={theme.sidebarForeground}
+        activeBackgroundColor={theme.sidebarAccent}
       />
 
       {/* Explore */}
@@ -98,11 +119,14 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
         onPress={() => router.push('/explore')}
         style={styles.drawerItem}
         labelStyle={styles.drawerLabel}
+        activeTintColor={theme.sidebarPrimary}
+        inactiveTintColor={theme.sidebarForeground}
+        activeBackgroundColor={theme.sidebarAccent}
       />
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: theme.sidebarBorder }]} />
 
-      {/* Settings — accordion with sub-items */}
+      {/* Settings — accordion */}
       <AccordionSection
         label="Settings"
         activePath={pathname}
@@ -115,7 +139,7 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// ─── Styles (layout only — colours come from theme at runtime) ────────────────
 
 const styles = StyleSheet.create({
   container: {
@@ -133,18 +157,16 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#e5e5e5',
     marginHorizontal: 16,
     marginVertical: 8,
   },
   drawerItem: {
-    borderRadius: 8,
+    borderRadius: 6,
     marginHorizontal: 8,
   },
   drawerLabel: {
     fontSize: 15,
   },
-  // Accordion
   accordionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -152,21 +174,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     paddingHorizontal: 12,
     paddingVertical: 12,
-    borderRadius: 8,
-  },
-  accordionHeaderActive: {
-    backgroundColor: 'rgba(0,0,0,0.06)',
+    borderRadius: 6,
   },
   accordionLabel: {
     fontSize: 15,
-    color: '#333',
-  },
-  accordionLabelActive: {
-    fontWeight: '600',
   },
   accordionChevron: {
     fontSize: 11,
-    color: '#888',
   },
   subItemContainer: {
     marginLeft: 16,
@@ -175,17 +189,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 8,
-  },
-  subItemActive: {
-    backgroundColor: 'rgba(0,0,0,0.06)',
+    borderRadius: 6,
   },
   subItemLabel: {
     fontSize: 14,
-    color: '#555',
-  },
-  subItemLabelActive: {
-    fontWeight: '600',
-    color: '#000',
   },
 });

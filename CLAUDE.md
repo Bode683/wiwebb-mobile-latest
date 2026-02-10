@@ -72,6 +72,79 @@ const { data, isFetching, error } = useGetColorsQuery();
 
 ---
 
+## Theme
+
+- All tokens: `src/theme/` — `colors.ts`, `typography.ts`, `spacing.ts`, `animations.ts`
+- Provider + `useTheme` hook: `src/theme/ThemeProvider.tsx`
+- Barrel export: `src/theme/index.ts`
+- Colour scheme persisted in MMKV key `app-color-scheme` via `src/mmkv/index.ts`
+- Wrapped in `src/app/_layout.tsx` inside `<ThemeProvider>`
+- Palette: amber primary (`#f59e0b`), neutral surfaces, MD3 structure + sidebar/chart extensions
+
+### Usage
+
+```tsx
+import { useTheme, typography, spacing, borderRadius, shadows, spring } from '../theme';
+
+// Colours (responds to light/dark)
+const { theme, colorScheme, isDark, toggleTheme, setColorScheme } = useTheme();
+<View style={{ backgroundColor: theme.background }}>
+<Text style={{ color: theme.onBackground }}>Hello</Text>
+
+// Typography variants (MD3 type scale)
+<Text style={typography.variants.bodyLarge}>Body text</Text>
+<Text style={[typography.variants.titleMedium, { color: theme.primary }]}>Title</Text>
+
+// Spacing (4pt grid)
+paddingHorizontal: spacing.md   // 16
+gap: sp(3)                      // 12  (sp = arbitrary multiple helper)
+
+// Border radius (base = 6px matching --radius: 0.375rem)
+borderRadius: borderRadius.md   // 6   (default component radius)
+borderRadius: borderRadius.lg   // 10
+
+// Shadows
+style={[styles.card, shadows.sm]}
+
+// Named spring animations (Reanimated)
+scale.value = spring(1.2, 'bouncy');  // presets: gentle | bouncy | stiff | slow | snap
+opacity.value = spring(0, 'snap');
+```
+
+### Colour token cheatsheet
+
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `primary` | `#f59e0b` | `#f59e0b` | Buttons, links, active state |
+| `onPrimary` | `#000` | `#000` | Text on primary |
+| `primaryContainer` | `#fffbeb` | `#92400e` | Accent backgrounds |
+| `onPrimaryContainer` | `#92400e` | `#fde68a` | Text on accent bg |
+| `background` | `#fff` | `#171717` | Screen background |
+| `surface` | `#fff` | `#262626` | Card / sheet background |
+| `onSurface` | `#262626` | `#e5e5e5` | Primary text |
+| `onSurfaceVariant` | `#6b7280` | `#a3a3a3` | Secondary / muted text |
+| `outline` | `#e5e7eb` | `#404040` | Borders, dividers |
+| `sidebar` | `#f9fafb` | `#0f0f0f` | Drawer / tab bar background |
+| `sidebarPrimary` | `#f59e0b` | `#f59e0b` | Active drawer/tab item |
+| `sidebarAccent` | `#fffbeb` | `#92400e` | Active item background |
+| `error` | `#ef4444` | `#ef4444` | Destructive actions |
+
+### Font loading (optional)
+
+Fonts `Inter`, `SourceSerif4`, `JetBrainsMono` are registered in `typography.fonts` but fall back to system fonts until loaded. To enable them:
+
+```bash
+npx expo install @expo-google-fonts/inter @expo-google-fonts/source-serif-4 @expo-google-fonts/jetbrains-mono
+```
+
+Then in `src/app/_layout.tsx`:
+```tsx
+import { useFonts, Inter_400Regular, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter';
+// load with useFonts({ Inter_400Regular, ... }) and gate render on fontsLoaded
+```
+
+---
+
 ## Issues & Fixes
 
 ### 1. react-native-mmkv v4 API Change
