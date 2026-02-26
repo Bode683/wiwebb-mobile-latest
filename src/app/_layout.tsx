@@ -5,36 +5,37 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../store';
 import { ThemeProvider } from '../theme';
+import { AuthBootstrap } from '../features/auth/components/AuthBootstrap';
 import '../i18n'; // Initialize i18n before app renders
 
-/**
- * RootLayout component that defines the main layout of the application.
- * It includes the StatusBar and the Stack navigator for handling different screens.
- */
 const RootLayout = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
       <ThemeProvider>
-      {/* StatusBar configuration */}
+      <AuthBootstrap>
       <StatusBar style="auto" />
 
-      {/* Stack navigator configuration */}
       <Stack
         screenOptions={{
-          headerShown: false, // Hide headers for all screens by default
+          headerShown: false,
         }}
       >
-        {/* Auth Stack */}
         <Stack.Screen
           name="(auth)"
           options={{
-            headerShown: false, // Hide header for auth screens
-            //gestureEnabled: false // Uncomment to disable swipe gestures for auth screens
+            headerShown: false,
           }}
         />
 
-        {/* Drawer — wraps all main app screens */}
+        <Stack.Screen
+          name="(onboarding)"
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
+        />
+
         <Stack.Screen
           name="(drawer)"
           options={{
@@ -43,6 +44,7 @@ const RootLayout = () => {
           }}
         />
       </Stack>
+      </AuthBootstrap>
       </ThemeProvider>
       </PersistGate>
     </Provider>

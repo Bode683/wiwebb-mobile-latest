@@ -3,5 +3,85 @@
     "title": "Bienvenue sur wiwebb",
     "description": "Commencez avec l'application",
     "getStarted": "Commencer"
+  },
+  "common": {
+    "next": "Suivant",
+    "back": "Retour"
+  },
+  "orgSetup": {
+    "title": "Configurez votre organisation",
+    "description": "Cr\u00e9ez votre organisation pour g\u00e9rer les sites et les appareils.",
+    "orgName": "Nom de l'organisation",
+    "orgNamePlaceholder": "ex. Acme Corp",
+    "country": "Pays",
+    "selectCountry": "S\u00e9lectionnez un pays",
+    "timezone": "Fuseau horaire",
+    "selectTimezone": "S\u00e9lectionnez un fuseau horaire"
+  },
+  "siteSetup": {
+    "title": "Ajoutez votre premier site",
+    "description": "Un site repr\u00e9sente un emplacement physique avec des appareils.",
+    "siteName": "Nom du site",
+    "siteNamePlaceholder": "ex. Bureau principal",
+    "address": "Adresse (facultatif)",
+    "addressPlaceholder": "ex. 123 rue Principale",
+    "siteType": "Type de site",
+    "types": {
+      "office": "Bureau",
+      "home": "Domicile",
+      "retail": "Commerce"
+    }
+  },
+  "deviceClaim": {
+    "title": "R\u00e9clamez vos appareils",
+    "description": "Ajoutez des appareils en entrant leur num\u00e9ro de s\u00e9rie et adresse MAC.",
+    "serialNumber": "Num\u00e9ro de s\u00e9rie",
+    "serialPlaceholder": "ex. SN-12345678",
+    "macAddress": "Adresse MAC",
+    "addDevice": "Ajouter un appareil",
+    "claimedDevices": "{{count}} appareil(s) r\u00e9clam\u00e9(s)",
+    "removeDevice": "Supprimer"
+  },
+  "config": {
+    "title": "Configurer le Wi-Fi",
+    "description": "D\u00e9finissez le profil sans fil pour vos appareils.",
+    "mode": {
+      "standard": "Standard (Recommand\u00e9)",
+      "custom": "Personnalis\u00e9"
+    },
+    "standardInfo": "Le mode standard applique la s\u00e9curit\u00e9 WPA2 Personnel avec orientation automatique des bandes, priorisation du trafic QoS et sans balisage VLAN.",
+    "ssid": "Nom du r\u00e9seau (SSID)",
+    "ssidPlaceholder": "ex. MonR\u00e9seau",
+    "security": "Type de s\u00e9curit\u00e9",
+    "securityTypes": {
+      "wpa2-personal": "WPA2 Personnel",
+      "wpa3-personal": "WPA3 Personnel",
+      "wpa2-enterprise": "WPA2 Entreprise",
+      "open": "Ouvert (Sans mot de passe)"
+    },
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Entrez le mot de passe Wi-Fi",
+    "vlan": "ID VLAN (facultatif)"
+  },
+  "activation": {
+    "title": "Activez vos appareils",
+    "description": "Connectez vos appareils \u00e0 l'alimentation et attendez qu'ils se mettent en ligne.",
+    "step1": "Connectez un c\u00e2ble Ethernet du switch PoE au point d'acc\u00e8s.",
+    "step2": "Branchez le switch PoE \u00e0 une prise \u00e9lectrique.",
+    "step3": "Attendez que la LED du point d'acc\u00e8s devienne verte fixe.",
+    "startMonitoring": "D\u00e9marrer la surveillance",
+    "polling": "V\u00e9rification de l'\u00e9tat de l'appareil...",
+    "timeout": "Nous n'avons pas encore d\u00e9tect\u00e9 votre appareil. Cela peut prendre quelques minutes de plus. Vous pouvez continuer et v\u00e9rifier le tableau de bord plus tard.",
+    "skip": "Passer"
+  },
+  "success": {
+    "title": "Vous \u00eates pr\u00eat !",
+    "description": "Votre r\u00e9seau est configur\u00e9 et pr\u00eat \u00e0 fonctionner.",
+    "orgCreated": "Organisation cr\u00e9\u00e9e",
+    "siteConfigured": "Premier site configur\u00e9",
+    "devicesClaimed": "Appareil(s) r\u00e9clam\u00e9(s)",
+    "wifiConfigured": "Profil Wi-Fi configur\u00e9",
+    "info": "Vos appareils peuvent prendre jusqu'\u00e0 5 minutes pour appara\u00eetre dans le tableau de bord.",
+    "goToDashboard": "Aller au tableau de bord"
   }
 }

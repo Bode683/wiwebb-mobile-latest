@@ -3,5 +3,85 @@
     "title": "Welcome to wiwebb",
     "description": "Get started with the app",
     "getStarted": "Get Started"
+  },
+  "common": {
+    "next": "Next",
+    "back": "Back"
+  },
+  "orgSetup": {
+    "title": "Set up your organization",
+    "description": "Create your organization to manage sites and devices.",
+    "orgName": "Organization name",
+    "orgNamePlaceholder": "e.g. Acme Corp",
+    "country": "Country",
+    "selectCountry": "Select a country",
+    "timezone": "Timezone",
+    "selectTimezone": "Select a timezone"
+  },
+  "siteSetup": {
+    "title": "Add your first site",
+    "description": "A site represents a physical location with devices.",
+    "siteName": "Site name",
+    "siteNamePlaceholder": "e.g. Main Office",
+    "address": "Address (optional)",
+    "addressPlaceholder": "e.g. 123 Main St",
+    "siteType": "Site type",
+    "types": {
+      "office": "Office",
+      "home": "Home",
+      "retail": "Retail"
+    }
+  },
+  "deviceClaim": {
+    "title": "Claim your devices",
+    "description": "Add devices by entering their serial number and MAC address.",
+    "serialNumber": "Serial number",
+    "serialPlaceholder": "e.g. SN-12345678",
+    "macAddress": "MAC address",
+    "addDevice": "Add Device",
+    "claimedDevices": "{{count}} device(s) claimed",
+    "removeDevice": "Remove"
+  },
+  "config": {
+    "title": "Configure Wi-Fi",
+    "description": "Set up the wireless profile for your devices.",
+    "mode": {
+      "standard": "Standard (Recommended)",
+      "custom": "Custom"
+    },
+    "standardInfo": "Standard mode applies WPA2 Personal security with auto band steering, QoS traffic prioritization, and no VLAN tagging.",
+    "ssid": "Network name (SSID)",
+    "ssidPlaceholder": "e.g. MyNetwork",
+    "security": "Security type",
+    "securityTypes": {
+      "wpa2-personal": "WPA2 Personal",
+      "wpa3-personal": "WPA3 Personal",
+      "wpa2-enterprise": "WPA2 Enterprise",
+      "open": "Open (No password)"
+    },
+    "password": "Password",
+    "passwordPlaceholder": "Enter Wi-Fi password",
+    "vlan": "VLAN ID (optional)"
+  },
+  "activation": {
+    "title": "Activate your devices",
+    "description": "Connect your devices to power and wait for them to come online.",
+    "step1": "Connect an Ethernet cable from the PoE switch to the access point.",
+    "step2": "Plug the PoE switch into a power outlet.",
+    "step3": "Wait for the LED on the access point to turn solid green.",
+    "startMonitoring": "Start Monitoring",
+    "polling": "Checking device status...",
+    "timeout": "We couldn't detect your device yet. It may take a few more minutes. You can continue and check the dashboard later.",
+    "skip": "Skip"
+  },
+  "success": {
+    "title": "You're all set!",
+    "description": "Your network is configured and ready to go.",
+    "orgCreated": "Organization created",
+    "siteConfigured": "First site configured",
+    "devicesClaimed": "Device(s) claimed",
+    "wifiConfigured": "Wi-Fi profile configured",
+    "info": "Your devices may take up to 5 minutes to appear in the dashboard.",
+    "goToDashboard": "Go to Dashboard"
   }
 }
