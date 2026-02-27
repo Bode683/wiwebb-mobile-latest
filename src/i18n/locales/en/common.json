@@ -5,5 +5,50 @@
   "language": {
     "english": "English",
     "french": "French"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "users_organizations": "Users & Organizations",
+    "users": "Users",
+    "organizations": "Organizations",
+    "groups_permissions": "Groups & Permissions",
+    "organization_users": "Organization Users",
+    "subscriptions": "Subscriptions",
+    "plans": "Plans",
+    "orders": "Orders",
+    "payments": "Payments",
+    "cas_certificates": "CAS & Certificates",
+    "certificate_authorities": "Certificate Authorities",
+    "certificates": "Certificates",
+    "radius": "RADIUS",
+    "accounting_sessions": "Accounting Sessions",
+    "radius_groups": "RADIUS Groups",
+    "batch_user_creation": "Batch User Creation",
+    "post_auth_log": "Post Auth Log",
+    "monitoring": "Monitoring",
+    "wifi_sessions": "WiFi Sessions",
+    "ipam": "IPAM",
+    "ip_addresses": "IP Addresses",
+    "subnets": "Subnets",
+    "configurations": "Configurations",
+    "templates": "Templates",
+    "vpn_servers": "VPN Servers",
+    "geographic_info": "Geographic Info",
+    "locations": "Locations",
+    "devices": "Devices",
+    "system_info": "System Info",
+    "settings": "Settings",
+    "account": "Account",
+    "profile": "Profile",
+    "help": "Help",
+    "contact_support": "Contact Support",
+    "documentation": "Documentation"
+  },
+  "comingSoon": {
+    "label": "Coming soon",
+    "description": "This section is under construction."
+  },
+  "user": {
+    "signOut": "Sign out"
   }
 }

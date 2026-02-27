@@ -1,63 +1,72 @@
 import React from 'react';
+import { Platform, Dimensions } from 'react-native';
 import { Drawer } from 'expo-router/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DrawerToggleButton } from '@react-navigation/drawer';
 import DrawerContent from '../../components/DrawerContent';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const DRAWER_WIDTH = Math.min(Math.round(SCREEN_WIDTH * 0.75), 320);
+
 /**
- * DrawerLayout defines the main app navigation.
- * GestureHandlerRootView is required for reliable swipe-to-open on all platforms.
- * Custom drawerContent handles item rendering, accordion sub-sections,
- * and active state highlighting.
- * Screens not meant to appear as top-level drawer items are hidden via
- * drawerItemStyle: { display: 'none' }.
+ * DrawerLayout — main app navigation shell.
+ *
+ * Platform-specific behaviour:
+ * - Android: drawerType 'front' (Material standard — drawer slides over content)
+ * - iOS:     drawerType 'slide' (content shifts with drawer — more iOS-native feel)
+ *
+ * All screens are hidden from the default drawer list; DrawerContent renders
+ * navigation manually using the mobileNavConfig.
  */
 export default function DrawerLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
-        drawerContent={props => <DrawerContent {...props} />}
+        drawerContent={(props) => <DrawerContent {...props} />}
         screenOptions={{
           headerShown: false,
-          drawerType: 'slide',
+          drawerType: Platform.select({ ios: 'slide', android: 'front', default: 'front' }),
+          drawerStyle: { width: DRAWER_WIDTH },
           swipeEdgeWidth: 50,
-          drawerHideStatusBarOnOpen: true,
+          drawerHideStatusBarOnOpen: Platform.OS === 'android',
+          overlayColor: 'rgba(0,0,0,0.45)',
         }}
       >
-        {/* ── Visible drawer destinations (managed by custom DrawerContent) ── */}
+        {/* ── Existing screens ─────────────────────────────────────────── */}
         <Drawer.Screen
           name="(tabs)"
           options={{
             drawerLabel: 'Home',
             title: 'Home',
-            // Drawer header shown at the top — contains the DrawerToggleButton
             headerShown: true,
             headerLeft: () => <DrawerToggleButton />,
-            // Hide from default drawer list; DrawerContent renders it manually
             drawerItemStyle: { display: 'none' },
           }}
         />
-
         <Drawer.Screen
           name="explore"
-          options={{
-            drawerLabel: 'Explore',
-            title: 'Explore',
-            headerShown: false,
-            drawerItemStyle: { display: 'none' },
-          }}
+          options={{ drawerItemStyle: { display: 'none' } }}
         />
-
-        {/* ── Settings section — sub-items navigated via accordion ── */}
         <Drawer.Screen
           name="settings"
-          options={{
-            drawerLabel: 'Settings',
-            title: 'Settings',
-            headerShown: false,
-            drawerItemStyle: { display: 'none' },
-          }}
+          options={{ drawerItemStyle: { display: 'none' } }}
         />
+
+        {/* ── New sections — all hidden from default list ───────────────── */}
+        <Drawer.Screen name="devices"            options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="system-info"        options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="users"              options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="organizations"      options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="groups"             options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="organization-users" options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="subscriptions"      options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="cas"                options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="radius"             options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="monitoring"         options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="ipam"               options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="configurations"     options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="geographic-info"    options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="help"               options={{ drawerItemStyle: { display: 'none' } }} />
       </Drawer>
     </GestureHandlerRootView>
   );

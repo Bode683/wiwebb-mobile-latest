@@ -1,197 +1,418 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  Platform,
+} from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 import {
   DrawerContentScrollView,
-  DrawerItem,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
+import { Feather } from '@expo/vector-icons';
 import { useRouter, usePathname } from 'expo-router';
-import { useTheme } from '../theme';
+import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
+import { useTheme, typography, spacing, borderRadius } from '../theme';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { authReset } from '../features/auth/slice/authSlice';
+import { PlatformIcon } from './PlatformIcon';
+import { mobileNavConfig, type MobileNavItem } from '../features/navigation/nav-config';
 
-// ─── Accordion section with nested sub-items ─────────────────────────────────
+// ─── Logo assets ──────────────────────────────────────────────────────────────
+import LogoOrange from '../assets/brand-logo/wiweeb-orange.svg';
+import LogoWhite from '../assets/brand-logo/wiweeb-white.svg';
 
-type SubItem = { label: string; path: string };
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-type AccordionSectionProps = {
-  label: string;
-  items: SubItem[];
+function isItemActive(pathname: string, href: string): boolean {
+  if (href === '/(tabs)/home') return pathname.includes('/(tabs)') || pathname === '/';
+  return pathname === href || pathname.startsWith(href + '/');
+}
+
+function isParentActive(pathname: string, item: MobileNavItem): boolean {
+  if (item.href) return isItemActive(pathname, item.href);
+  return item.children?.some((c) => c.href ? isItemActive(pathname, c.href) : false) ?? false;
+}
+
+// ─── Animated collapsible section ────────────────────────────────────────────
+
+interface CollapsibleSectionProps {
+  item: MobileNavItem;
   activePath: string;
-};
+}
 
-const AccordionSection = ({ label, items, activePath }: AccordionSectionProps) => {
-  const router = useRouter();
+function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
   const { theme } = useTheme();
-  const [open, setOpen] = useState(false);
+  const { t } = useTranslation('common');
+  const router = useRouter();
+  const parentActive = isParentActive(activePath, item);
 
-  const isActive = items.some(item => activePath.startsWith(item.path));
+  const [open, setOpen] = useState(parentActive);
+  const contentHeight = useSharedValue(parentActive ? 600 : 0);
+  const chevronAngle = useSharedValue(parentActive ? 90 : 0);
+
+  const contentStyle = useAnimatedStyle(() => ({
+    maxHeight: contentHeight.value,
+    overflow: 'hidden',
+    opacity: withTiming(contentHeight.value > 10 ? 1 : 0, { duration: 150 }),
+  }));
+
+  const chevronStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${chevronAngle.value}deg` }],
+  }));
+
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    contentHeight.value = withTiming(next ? 600 : 0, { duration: 220 });
+    chevronAngle.value = withTiming(next ? 90 : 0, { duration: 220 });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
+  const navigateTo = (href: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push(href as any);
+  };
 
   return (
     <View>
-      <TouchableOpacity
-        style={[
-          styles.accordionHeader,
-          isActive && { backgroundColor: theme.sidebarAccent },
+      {/* Section header */}
+      <Pressable
+        onPress={toggle}
+        android_ripple={{ color: 'rgba(245,158,11,0.10)' }}
+        style={({ pressed }) => [
+          styles.sectionHeader,
+          parentActive && { backgroundColor: theme.sidebarAccent },
+          Platform.OS === 'ios' && pressed && { opacity: 0.7 },
         ]}
-        onPress={() => setOpen(prev => !prev)}
-        activeOpacity={0.7}
       >
-        <Text
-          style={[
-            styles.accordionLabel,
-            { color: theme.sidebarForeground },
-            isActive && { color: theme.sidebarAccentForeground, fontWeight: '600' },
-          ]}
-        >
-          {label}
-        </Text>
-        <Text style={[styles.accordionChevron, { color: theme.onSurfaceVariant }]}>
-          {open ? '▲' : '▼'}
-        </Text>
-      </TouchableOpacity>
-
-      {open && (
-        <View style={styles.subItemContainer}>
-          {items.map(item => {
-            const active = activePath.startsWith(item.path);
-            return (
-              <TouchableOpacity
-                key={item.path}
-                style={[
-                  styles.subItem,
-                  active && { backgroundColor: theme.sidebarAccent },
-                ]}
-                onPress={() => router.push(item.path as any)}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    styles.subItemLabel,
-                    { color: theme.onSurfaceVariant },
-                    active && { color: theme.sidebarAccentForeground, fontWeight: '600' },
-                  ]}
-                >
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+        <View style={styles.sectionHeaderLeft}>
+          <PlatformIcon
+            feather={item.feather}
+            symbol={item.symbol}
+            size={17}
+            color={parentActive ? theme.sidebarPrimary : theme.onSurfaceVariant}
+          />
+          <Text
+            style={[
+              typography.variants.labelLarge,
+              {
+                color: parentActive ? theme.sidebarAccentForeground : theme.sidebarForeground,
+                marginLeft: spacing.sm,
+              },
+            ]}
+          >
+            {t(item.labelKey)}
+          </Text>
         </View>
-      )}
+        <Animated.View style={chevronStyle}>
+          <Feather
+            name="chevron-right"
+            size={15}
+            color={theme.onSurfaceVariant}
+          />
+        </Animated.View>
+      </Pressable>
+
+      {/* Sub-items */}
+      <Animated.View style={contentStyle}>
+        {item.children?.map((child) => {
+          if (!child.href) return null;
+          const active = isItemActive(activePath, child.href);
+          return (
+            <Pressable
+              key={child.labelKey}
+              onPress={() => navigateTo(child.href!)}
+              android_ripple={{ color: 'rgba(245,158,11,0.10)' }}
+              style={({ pressed }) => [
+                styles.subItem,
+                active && { backgroundColor: theme.sidebarAccent },
+                Platform.OS === 'ios' && pressed && { opacity: 0.7 },
+              ]}
+            >
+              <PlatformIcon
+                feather={child.feather}
+                symbol={child.symbol}
+                size={14}
+                color={active ? theme.sidebarPrimary : theme.onSurfaceVariant}
+              />
+              <Text
+                style={[
+                  typography.variants.bodyMedium,
+                  {
+                    color: active ? theme.sidebarAccentForeground : theme.onSurfaceVariant,
+                    marginLeft: spacing.sm,
+                    flex: 1,
+                  },
+                ]}
+              >
+                {t(child.labelKey)}
+              </Text>
+              {active && (
+                <View style={[styles.activeIndicator, { backgroundColor: theme.sidebarPrimary }]} />
+              )}
+            </Pressable>
+          );
+        })}
+      </Animated.View>
     </View>
   );
-};
+}
+
+// ─── Direct nav item (no children) ───────────────────────────────────────────
+
+interface NavItemProps {
+  item: MobileNavItem;
+  activePath: string;
+}
+
+function NavItem({ item, activePath }: NavItemProps) {
+  const { theme } = useTheme();
+  const { t } = useTranslation('common');
+  const router = useRouter();
+  const active = item.href ? isItemActive(activePath, item.href) : false;
+
+  const navigateTo = () => {
+    if (!item.href) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push(item.href as any);
+  };
+
+  return (
+    <Pressable
+      onPress={navigateTo}
+      android_ripple={{ color: 'rgba(245,158,11,0.10)' }}
+      style={({ pressed }) => [
+        styles.navItem,
+        active && { backgroundColor: theme.sidebarAccent },
+        Platform.OS === 'ios' && pressed && { opacity: 0.7 },
+      ]}
+    >
+      <PlatformIcon
+        feather={item.feather}
+        symbol={item.symbol}
+        size={17}
+        color={active ? theme.sidebarPrimary : theme.onSurfaceVariant}
+      />
+      <Text
+        style={[
+          typography.variants.labelLarge,
+          {
+            color: active ? theme.sidebarAccentForeground : theme.sidebarForeground,
+            marginLeft: spacing.sm,
+            flex: 1,
+          },
+        ]}
+      >
+        {t(item.labelKey)}
+      </Text>
+      {active && (
+        <View style={[styles.activeIndicator, { backgroundColor: theme.sidebarPrimary }]} />
+      )}
+    </Pressable>
+  );
+}
 
 // ─── Main DrawerContent ───────────────────────────────────────────────────────
 
 export default function DrawerContent(props: DrawerContentComponentProps) {
-  const router = useRouter();
+  const { theme, isDark } = useTheme();
+  const { t } = useTranslation('common');
   const pathname = usePathname();
-  const { theme } = useTheme();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
+
+  const LogoSvg = isDark ? LogoWhite : LogoOrange;
+
+  // User avatar initials
+  const initials = user
+    ? `${user.first_name?.[0] ?? ''}${user.last_name?.[0] ?? ''}`.toUpperCase() || user.username?.[0]?.toUpperCase() || 'U'
+    : 'U';
+
+  const handleSignOut = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    dispatch(authReset());
+    router.replace('/(auth)/welcome');
+  };
+
+  const Divider = () => (
+    <View style={[styles.divider, { backgroundColor: theme.sidebarBorder }]} />
+  );
 
   return (
     <DrawerContentScrollView
       {...props}
+      showsVerticalScrollIndicator={false}
       contentContainerStyle={[styles.container, { backgroundColor: theme.sidebar }]}
     >
-      {/* App name */}
-      <View style={styles.header}>
-        <Text style={[styles.appName, { color: theme.sidebarPrimary }]}>Wiweeb</Text>
+      {/* ── Brand header ──────────────────────────────────────────────────── */}
+      <View style={styles.brand}>
+        <View style={styles.logoWrap}>
+          <LogoSvg height={28} width={undefined} />
+        </View>
       </View>
 
-      <View style={[styles.divider, { backgroundColor: theme.sidebarBorder }]} />
+      <Divider />
 
-      {/* Home */}
-      <DrawerItem
-        label="Home"
-        focused={pathname.includes('/(tabs)') || pathname === '/'}
-        onPress={() => router.push('/(tabs)/home')}
-        style={styles.drawerItem}
-        labelStyle={styles.drawerLabel}
-        activeTintColor={theme.sidebarPrimary}
-        inactiveTintColor={theme.sidebarForeground}
-        activeBackgroundColor={theme.sidebarAccent}
-      />
+      {/* ── Navigation items ──────────────────────────────────────────────── */}
+      <View style={styles.navSection}>
+        {mobileNavConfig.map((item) =>
+          item.children ? (
+            <CollapsibleSection key={item.labelKey} item={item} activePath={pathname} />
+          ) : (
+            <NavItem key={item.labelKey} item={item} activePath={pathname} />
+          ),
+        )}
+      </View>
 
-      {/* Explore */}
-      <DrawerItem
-        label="Explore"
-        focused={pathname.startsWith('/explore')}
-        onPress={() => router.push('/explore')}
-        style={styles.drawerItem}
-        labelStyle={styles.drawerLabel}
-        activeTintColor={theme.sidebarPrimary}
-        inactiveTintColor={theme.sidebarForeground}
-        activeBackgroundColor={theme.sidebarAccent}
-      />
+      <Divider />
 
-      <View style={[styles.divider, { backgroundColor: theme.sidebarBorder }]} />
+      {/* ── User footer ───────────────────────────────────────────────────── */}
+      <View style={styles.footer}>
+        {/* Avatar + name/email */}
+        <View style={styles.userRow}>
+          <View style={[styles.avatar, { backgroundColor: theme.primaryContainer }]}>
+            <Text style={[typography.variants.labelMedium, { color: theme.primary }]}>
+              {initials}
+            </Text>
+          </View>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text
+              style={[typography.variants.labelMedium, { color: theme.sidebarForeground }]}
+              numberOfLines={1}
+            >
+              {user ? `${user.first_name} ${user.last_name}`.trim() || user.username : '—'}
+            </Text>
+            {user?.email ? (
+              <Text
+                style={[typography.variants.labelSmall, { color: theme.onSurfaceVariant }]}
+                numberOfLines={1}
+              >
+                {user.email}
+              </Text>
+            ) : null}
+          </View>
+        </View>
 
-      {/* Settings — accordion */}
-      <AccordionSection
-        label="Settings"
-        activePath={pathname}
-        items={[
-          { label: 'Account', path: '/settings' },
-          { label: 'Profile', path: '/settings/profile' },
-        ]}
-      />
+        {/* Sign out */}
+        <Pressable
+          onPress={handleSignOut}
+          android_ripple={{ color: 'rgba(239,68,68,0.10)' }}
+          style={({ pressed }) => [
+            styles.signOutBtn,
+            { borderColor: theme.outline },
+            Platform.OS === 'ios' && pressed && { opacity: 0.7 },
+          ]}
+        >
+          <Feather name="log-out" size={16} color={theme.error} />
+          <Text style={[typography.variants.labelMedium, { color: theme.error, marginLeft: spacing.sm }]}>
+            {t('user.signOut')}
+          </Text>
+        </Pressable>
+      </View>
     </DrawerContentScrollView>
   );
 }
 
-// ─── Styles (layout only — colours come from theme at runtime) ────────────────
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     paddingTop: 0,
   },
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 24,
+  brand: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md + 4,
   },
-  appName: {
-    fontSize: 22,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+  logoWrap: {
+    // SVG height is fixed at 28; width is proportional
   },
   divider: {
-    height: 1,
-    marginHorizontal: 16,
-    marginVertical: 8,
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: spacing.md,
+    marginVertical: spacing.xs,
   },
-  drawerItem: {
-    borderRadius: 6,
-    marginHorizontal: 8,
+  navSection: {
+    paddingVertical: spacing.xs,
   },
-  drawerLabel: {
-    fontSize: 15,
-  },
-  accordionHeader: {
+  // Direct nav item
+  navItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    borderRadius: 6,
+    marginHorizontal: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm + 1,
+    borderRadius: borderRadius.md,
+    minHeight: 44,
   },
-  accordionLabel: {
-    fontSize: 15,
+  // Collapsible section header
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm + 1,
+    borderRadius: borderRadius.md,
+    minHeight: 44,
   },
-  accordionChevron: {
-    fontSize: 11,
+  sectionHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
-  subItemContainer: {
-    marginLeft: 16,
-  },
+  // Sub-item
   subItem: {
-    marginHorizontal: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: spacing.sm,
+    marginLeft: spacing.md + 6,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.md,
+    minHeight: 40,
   },
-  subItemLabel: {
-    fontSize: 14,
+  // Active left-edge indicator
+  activeIndicator: {
+    width: 3,
+    height: 16,
+    borderRadius: 2,
+    marginLeft: spacing.xs,
+  },
+  // Footer
+  footer: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    gap: spacing.sm,
+  },
+  userRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  avatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  signOutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    borderRadius: borderRadius.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    minHeight: 44,
   },
 });

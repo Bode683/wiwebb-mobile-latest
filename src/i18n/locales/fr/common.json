@@ -5,5 +5,50 @@
   "language": {
     "english": "Anglais",
     "french": "Français"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "users_organizations": "Utilisateurs & Organisations",
+    "users": "Utilisateurs",
+    "organizations": "Organisations",
+    "groups_permissions": "Groupes & Permissions",
+    "organization_users": "Utilisateurs d'organisation",
+    "subscriptions": "Abonnements",
+    "plans": "Plans",
+    "orders": "Commandes",
+    "payments": "Paiements",
+    "cas_certificates": "CAS & Certificats",
+    "certificate_authorities": "Autorités de certification",
+    "certificates": "Certificats",
+    "radius": "RADIUS",
+    "accounting_sessions": "Sessions de comptabilité",
+    "radius_groups": "Groupes RADIUS",
+    "batch_user_creation": "Création d'utilisateurs en lot",
+    "post_auth_log": "Journal post-authentification",
+    "monitoring": "Surveillance",
+    "wifi_sessions": "Sessions WiFi",
+    "ipam": "IPAM",
+    "ip_addresses": "Adresses IP",
+    "subnets": "Sous-réseaux",
+    "configurations": "Configurations",
+    "templates": "Modèles",
+    "vpn_servers": "Serveurs VPN",
+    "geographic_info": "Informations géographiques",
+    "locations": "Emplacements",
+    "devices": "Appareils",
+    "system_info": "Infos système",
+    "settings": "Paramètres",
+    "account": "Compte",
+    "profile": "Profil",
+    "help": "Aide",
+    "contact_support": "Contacter le support",
+    "documentation": "Documentation"
+  },
+  "comingSoon": {
+    "label": "Bientôt disponible",
+    "description": "Cette section est en construction."
+  },
+  "user": {
+    "signOut": "Se déconnecter"
   }
 }
