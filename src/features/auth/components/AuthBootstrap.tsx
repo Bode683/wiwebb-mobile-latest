@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, ReactNode, useState } from 'react';
+import React, { useEffect, useRef, ReactNode, useState, useCallback } from 'react';
 import { useSegments, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useAuth } from '../hooks/useAuth';
@@ -8,12 +8,20 @@ import { AnimatedSplash } from './AnimatedSplash';
 
 SplashScreen.preventAutoHideAsync();
 
+// Minimum time the branded splash is visible — ensures the entrance animation
+// always plays fully even when auth resolves instantly (e.g. mock auth in dev).
+const SPLASH_MIN_MS = 2200;
+
 export function AuthBootstrap({ children }: { children: ReactNode }) {
   const { status, isAuthenticated, user, bootstrap } = useAuth();
   const onboardingCompleted = useAppSelector(selectOnboardingCompleted);
   const segments = useSegments();
   const router = useRouter();
   const hasBootstrapped = useRef(false);
+
+  // Two independent gates: auth resolved + minimum time elapsed
+  const [authReady, setAuthReady] = useState(false);
+  const [minTimePassed, setMinTimePassed] = useState(false);
 
   const [splashVisible, setSplashVisible] = useState(true);
   const [splashMounted, setSplashMounted] = useState(true);
@@ -26,10 +34,18 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
     }
   }, [bootstrap]);
 
-  // Hide the system splash immediately — AnimatedSplash takes over
+  // Minimum display timer — starts on mount
   useEffect(() => {
-    SplashScreen.hideAsync();
+    const t = setTimeout(() => setMinTimePassed(true), SPLASH_MIN_MS);
+    return () => clearTimeout(t);
   }, []);
+
+  // Only dismiss the splash when BOTH gates are open
+  useEffect(() => {
+    if (authReady && minTimePassed) {
+      setSplashVisible(false);
+    }
+  }, [authReady, minTimePassed]);
 
   // Handle routing decisions once auth status is resolved
   useEffect(() => {
@@ -57,9 +73,15 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
       }
     }
 
-    // Dismiss animated splash once routing is determined
-    setSplashVisible(false);
+    setAuthReady(true);
   }, [status, isAuthenticated, onboardingCompleted, user, segments, router]);
+
+  // AnimatedSplash calls this once its background has laid out and is painted.
+  // We hide the system splash here rather than in a bare useEffect so there is
+  // no frame where the underlying app content is exposed between the two.
+  const handleSplashReady = useCallback(() => {
+    SplashScreen.hideAsync();
+  }, []);
 
   return (
     <>
@@ -67,6 +89,7 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
       {splashMounted && (
         <AnimatedSplash
           visible={splashVisible}
+          onReady={handleSplashReady}
           onHidden={() => setSplashMounted(false)}
         />
       )}

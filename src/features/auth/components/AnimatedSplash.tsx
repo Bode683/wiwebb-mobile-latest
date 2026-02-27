@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -19,9 +19,13 @@ const { width, height } = Dimensions.get('screen');
 const RING_SIZE = 140;
 const PULSE_COLOR = '#f59e0b';
 
-type Props = { visible: boolean; onHidden: () => void };
+type Props = {
+  visible: boolean;
+  onReady: () => void;
+  onHidden: () => void;
+};
 
-export function AnimatedSplash({ visible, onHidden }: Props) {
+export function AnimatedSplash({ visible, onReady, onHidden }: Props) {
   const { isDark } = useTheme();
 
   const containerOpacity = useSharedValue(1);
@@ -31,7 +35,7 @@ export function AnimatedSplash({ visible, onHidden }: Props) {
   const ring2 = useSharedValue(0);
   const ring3 = useSharedValue(0);
 
-  // Entrance animations
+  // Entrance animations — start immediately on mount
   useEffect(() => {
     logoOpacity.value = withTiming(1, { duration: 700 });
     logoScale.value = withTiming(1, {
@@ -42,20 +46,20 @@ export function AnimatedSplash({ visible, onHidden }: Props) {
     const pulseDuration = 2000;
     const pulseEasing = Easing.out(Easing.ease);
     ring1.value = withDelay(
-      450,
+      400,
       withRepeat(withTiming(1, { duration: pulseDuration, easing: pulseEasing }), -1, false),
     );
     ring2.value = withDelay(
-      750,
+      700,
       withRepeat(withTiming(1, { duration: pulseDuration, easing: pulseEasing }), -1, false),
     );
     ring3.value = withDelay(
-      1050,
+      1000,
       withRepeat(withTiming(1, { duration: pulseDuration, easing: pulseEasing }), -1, false),
     );
   }, []);
 
-  // Exit animation when auth is resolved
+  // Exit animation — triggered when both auth ready + min time passed
   useEffect(() => {
     if (!visible) {
       containerOpacity.value = withTiming(
@@ -67,6 +71,13 @@ export function AnimatedSplash({ visible, onHidden }: Props) {
       );
     }
   }, [visible]);
+
+  // Called once the background view is laid out and painted.
+  // We defer one animation frame to guarantee the native layer has flushed
+  // before we signal the parent to hide the system splash screen.
+  const handleLayout = useCallback(() => {
+    requestAnimationFrame(() => onReady());
+  }, [onReady]);
 
   const containerStyle = useAnimatedStyle(() => ({
     opacity: containerOpacity.value,
@@ -96,8 +107,9 @@ export function AnimatedSplash({ visible, onHidden }: Props) {
     <Animated.View
       style={[StyleSheet.absoluteFill, styles.container, containerStyle]}
       pointerEvents="none"
+      onLayout={handleLayout}
     >
-      {/* Branded background */}
+      {/* Branded background — painted before system splash hides */}
       {isDark ? (
         <AuthBgDark
           width={width}
