@@ -4,7 +4,7 @@ import { getAccessToken } from '../../features/auth/utils/tokenStorage';
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.EXPO_PUBLIC_API_URL ?? 'https://api.wiwebb.com',
+    baseUrl: process.env.EXPO_PUBLIC_API_URL ?? 'https://api.wiweeb.com',
     prepareHeaders: async (headers) => {
       const token = await getAccessToken();
       if (token) {

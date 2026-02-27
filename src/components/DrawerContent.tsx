@@ -95,7 +95,7 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
     >
       {/* App name */}
       <View style={styles.header}>
-        <Text style={[styles.appName, { color: theme.sidebarPrimary }]}>wiwebb</Text>
+        <Text style={[styles.appName, { color: theme.sidebarPrimary }]}>Wiweeb</Text>
       </View>
 
       <View style={[styles.divider, { backgroundColor: theme.sidebarBorder }]} />

@@ -11,7 +11,7 @@ export const MOCK_USER: User = {
   email: 'dev@mock.local',
   bio: '',
   url: '',
-  company: 'wiwebb',
+  company: 'wiweeb',
   location: '',
   phone_number: null,
   birth_date: null,

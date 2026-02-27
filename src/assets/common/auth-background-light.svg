@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1284 2778" width="1284" height="2778"
      preserveAspectRatio="xMidYMid meet">
   <!--
-    wiwebb — Splash Screen, LIGHT MODE
+    Wiweeb — Splash Screen, LIGHT MODE
     Canvas  : 1284 × 2778 px  (iPhone 14 Pro Max native — covers all modern devices)
     Expo    : Use as splash.png source (resizeMode: "contain" or "cover")
     Sky/BG  : Daylight blue gradient  #7BC0E8 → #B8D9F0 → #DAF0E8
     Terrain : Green family   #2E7D52 / #3A9E68 / #4CB87A
     Accents : Brand orange   #F7941D
-    Logo    : Orange wiwebb wordmark + wifi signal, centred vertically ~40% from top
+    Logo    : Orange Wiweeb wordmark + wifi signal, centred vertically ~40% from top
   -->
 
   <defs>
@@ -56,7 +56,7 @@
 
 
   <!-- ══════════════════════════════════════════════
-       LOGO — Orange wiwebb wordmark + wifi signal
+       LOGO — Orange Wiweeb wordmark + wifi signal
        Identical transform to dark variant
          translate(223.5, 657.5) scale(0.4103)
   ══════════════════════════════════════════════ -->

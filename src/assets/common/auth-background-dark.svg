@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1284 2778" width="1284" height="2778"
      preserveAspectRatio="xMidYMid meet">
   <!--
-    wiwebb — Splash Screen, DARK MODE
+    Wiweeb — Splash Screen, DARK MODE
     Canvas  : 1284 × 2778 px  (iPhone 14 Pro Max native — covers all modern devices)
     Expo    : Use as splash.png source (resizeMode: "contain" or "cover")
-    Sky/BG  : Dark charcoal  #1C1C1E  (matches wiwebb-bg-mobile-dark)
+    Sky/BG  : Dark charcoal  #1C1C1E  (matches wiweeb-bg-mobile-dark)
     Terrain : Green family   #2E7D52 / #3A9E68 / #4CB87A
     Accents : Brand orange   #F7941D
-    Logo    : White wiwebb wordmark + wifi signal, centred vertically ~40% from top
+    Logo    : White Wiweeb wordmark + wifi signal, centred vertically ~40% from top
   -->
 
   <defs>
@@ -48,7 +48,7 @@
 
 
   <!-- ══════════════════════════════════════════════
-       LOGO — White wiwebb wordmark + wifi signal
+       LOGO — White Wiweeb wordmark + wifi signal
        Scaled to ~640px wide, centred at (642, 1060)
        Original viewBox: 240 690 1560 582  (1560 × 582 units)
        Scale factor: 640 / 1560 ≈ 0.4103

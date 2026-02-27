@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "wiwebb",
-    "slug": "wiwebb",
+    "name": "Wiweeb",
+    "slug": "wiweeb",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "wiwebb",
+    "scheme": "wiweeb",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.barnesjack.wiwebb"
+      "bundleIdentifier": "com.barnesjack.wiweeb"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +21,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.barnesjack.wiwebb"
+      "package": "com.barnesjack.wiweeb"
     },
     "web": {
       "output": "static",

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, ReactNode } from 'react';
+import React, { useEffect, useRef, ReactNode, useState } from 'react';
 import { useSegments, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useAuth } from '../hooks/useAuth';
 import { useAppSelector } from '../../../store/hooks';
 import { selectOnboardingCompleted } from '../../onboarding/slice/onboardingSlice';
+import { AnimatedSplash } from './AnimatedSplash';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,6 +15,9 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
   const router = useRouter();
   const hasBootstrapped = useRef(false);
 
+  const [splashVisible, setSplashVisible] = useState(true);
+  const [splashMounted, setSplashMounted] = useState(true);
+
   // Run bootstrap once on mount
   useEffect(() => {
     if (!hasBootstrapped.current) {
@@ -21,6 +25,11 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
       bootstrap();
     }
   }, [bootstrap]);
+
+  // Hide the system splash immediately — AnimatedSplash takes over
+  useEffect(() => {
+    SplashScreen.hideAsync();
+  }, []);
 
   // Handle routing decisions once auth status is resolved
   useEffect(() => {
@@ -30,12 +39,10 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
     const inOnboardingGroup = segments[0] === '(onboarding)';
 
     if (!isAuthenticated) {
-      // Not authenticated → must be in auth screens
       if (!inAuthGroup) {
         router.replace('/(auth)/welcome' as any);
       }
     } else {
-      // Authenticated — check onboarding
       const ownsOrg = user?.organization_users?.is_admin === true;
       const needsOnboarding = !onboardingCompleted && !ownsOrg;
 
@@ -44,15 +51,25 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
           router.replace('/(onboarding)' as any);
         }
       } else {
-        // Fully onboarded → go to main app
         if (inAuthGroup || inOnboardingGroup) {
           router.replace('/(drawer)/(tabs)/home' as any);
         }
       }
     }
 
-    SplashScreen.hideAsync();
+    // Dismiss animated splash once routing is determined
+    setSplashVisible(false);
   }, [status, isAuthenticated, onboardingCompleted, user, segments, router]);
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      {splashMounted && (
+        <AnimatedSplash
+          visible={splashVisible}
+          onHidden={() => setSplashMounted(false)}
+        />
+      )}
+    </>
+  );
 }

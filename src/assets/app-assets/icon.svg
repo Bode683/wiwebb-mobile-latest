@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <!--
-    wiwebb — App Launcher Icon
+    Wiweeb — App Launcher Icon
     Canvas  : 1024 × 1024 px
     Content : "w-i-w" letters + wifi signal above the i (from the brand logo)
     BG      : Brand orange #F7941D
-    Fg      : White — exact traced paths from wiwebb-orange.svg
+    Fg      : White — exact traced paths from wiweeb-orange.svg
 
     The logo has TWO separate letter paths that together spell "wiw":
       Path 1 (w+i+w left): x 249 → ~740,  y 1007 → 1238
@@ -12,7 +12,7 @@
         — Actually on review: this path IS the full left-w + i + right-w compound
         — BUT the second path (x 713→1050) is labelled "w (second)" in the SVG
         — So together they form: [left-w] + [i] + [w] + [second-w] = "wiww"?
-        — No — looking at the logo: it reads "wiwebb". The "wiw" prefix is:
+        — No — looking at the logo: it reads "wiweeb". The "wiw" prefix is:
             left-w (x~249-415), i (x~597-668), right-w (x~713-1020)
         — Path 1 contains: left-w + i + first-right-w as one compound path
         — Path 2 contains: the second w (rightmost of the "wiw")
