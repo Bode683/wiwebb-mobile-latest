@@ -32,7 +32,7 @@ import LogoWhite from '../assets/brand-logo/wiweeb-white.svg';
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function isItemActive(pathname: string, href: string): boolean {
-  if (href === '/(tabs)/home') return pathname.includes('/(tabs)') || pathname === '/';
+  if (href === '/dashboard') return pathname === '/dashboard' || pathname === '/';
   return pathname === href || pathname.startsWith(href + '/');
 }
 

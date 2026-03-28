@@ -50,5 +50,36 @@
   },
   "user": {
     "signOut": "Se déconnecter"
+  },
+  "profile": {
+    "never": "Jamais",
+    "no_organization": "Aucune organisation",
+    "sections": {
+      "personal":     "Personnel",
+      "contact":      "Contact",
+      "account":      "Compte",
+      "organization": "Organisation",
+      "notes":        "Notes"
+    },
+    "fields": {
+      "username":    "Nom d'utilisateur",
+      "email":       "E-mail",
+      "phone":       "Téléphone",
+      "location":    "Localisation",
+      "company":     "Entreprise",
+      "url":         "Site web",
+      "bio":         "Biographie",
+      "birth_date":  "Date de naissance",
+      "date_joined": "Membre depuis",
+      "last_login":  "Dernière connexion",
+      "organization":"Organisation"
+    },
+    "badges": {
+      "superuser": "Super-utilisateur",
+      "staff":     "Personnel",
+      "admin":     "Admin",
+      "active":    "Actif",
+      "inactive":  "Inactif"
+    }
   }
 }

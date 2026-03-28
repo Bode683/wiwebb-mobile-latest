@@ -27,7 +27,7 @@ export const mobileNavConfig: MobileNavItem[] = [
     labelKey: 'nav.dashboard',
     feather: 'grid',
     symbol: 'square.grid.2x2',
-    href: '/(tabs)/home',
+    href: '/dashboard',
   },
   {
     labelKey: 'nav.users_organizations',

@@ -1,6 +1,5 @@
-import React from 'react';
-import { Tabs } from 'expo-router';
-import TabBar from '../../../components/tabBar';
+import { Tabs } from "expo-router";
+import TabBar from "../../../components/tabBar";
 
 /**
  * _layout component sets up the tab navigation layout.
@@ -9,17 +8,19 @@ import TabBar from '../../../components/tabBar';
 const _layout = () => {
   return (
     <Tabs
-      initialRouteName="home"
-      tabBar={props => <TabBar {...props} />}
+      initialRouteName="dashboard"
+      tabBar={(props) => <TabBar {...props} />}
       backBehavior="history"
       screenOptions={{
         headerShown: false,
-        animation: 'fade',
+        animation: "fade",
       }}
     >
-      <Tabs.Screen name="home" options={{ title: 'Home' }} />
-      <Tabs.Screen name="anotherPage" options={{ title: 'Another Page' }} />
-      <Tabs.Screen name="thirdPage" options={{ title: 'Third Page' }} />
+      <Tabs.Screen name="dashboard" options={{ title: "Dashboard" }} />
+      <Tabs.Screen name="devices" options={{ title: "Devices" }} />
+      <Tabs.Screen name="monitor" options={{ title: "Monitor" }} />
+      <Tabs.Screen name="network" options={{ title: "Network" }} />
+      <Tabs.Screen name="more" options={{ title: "More" }} />
     </Tabs>
   );
 };

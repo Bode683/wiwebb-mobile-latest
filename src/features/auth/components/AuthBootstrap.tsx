@@ -43,7 +43,7 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
         }
       } else {
         if (inAuthGroup || inOnboardingGroup) {
-          router.replace('/(drawer)/(tabs)/home' as any);
+          router.replace('/(drawer)/(tabs)/dashboard' as any);
         }
       }
     }

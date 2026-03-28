@@ -1,25 +1,28 @@
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Icon from '../assets/icons';
 import { useTheme } from '../theme';
+import { PlatformIcon } from './PlatformIcon';
 
 const { height } = Dimensions.get('window');
 const hp = (percentage) => (height * percentage) / 100;
 
+const TAB_ICONS = {
+  dashboard:        { feather: 'grid',     symbol: 'square.grid.2x2'    },
+  devices: { feather: 'tablet',   symbol: 'laptopcomputer'     },
+  monitor:   { feather: 'activity', symbol: 'waveform.path.ecg'  },
+  network:     { feather: 'globe',    symbol: 'globe'              },
+  more:        { feather: 'menu',     symbol: 'line.3.horizontal'  },
+};
+
 /**
  * TabBar component renders a custom bottom tab bar.
- * Colours are driven by the active theme so it responds to light/dark mode.
+ * Icons are driven by PlatformIcon (SF Symbols on iOS, Feather on Android).
+ * Colours respond to the active theme (light/dark).
  */
 const TabBar = ({ state, descriptors, navigation }) => {
   const { bottom } = useSafeAreaInsets();
   const { theme } = useTheme();
-
-  const icons = {
-    home:        (props) => <Icon name="home"   size={hp(2.5)} {...props} />,
-    anotherPage: (props) => <Icon name="heart"  size={hp(2.5)} {...props} />,
-    thirdPage:   (props) => <Icon name="camera" size={hp(2.5)} {...props} />,
-  };
 
   return (
     <View
@@ -56,13 +59,22 @@ const TabBar = ({ state, descriptors, navigation }) => {
           }
         };
 
+        const iconConfig = TAB_ICONS[route.name];
+
         return (
           <TouchableOpacity
             key={route.key}
             onPress={onPress}
             style={styles.tab}
           >
-            {icons[route.name] && icons[route.name]({ color, focused: isFocused })}
+            {iconConfig && (
+              <PlatformIcon
+                feather={iconConfig.feather}
+                symbol={iconConfig.symbol}
+                size={hp(2.5)}
+                color={color}
+              />
+            )}
             <Text style={[styles.label, { color }]}>{label}</Text>
           </TouchableOpacity>
         );
