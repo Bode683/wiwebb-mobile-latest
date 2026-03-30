@@ -18,9 +18,8 @@ const _layout = () => {
     >
       <Tabs.Screen name="dashboard" options={{ title: "Dashboard" }} />
       <Tabs.Screen name="devices" options={{ title: "Devices" }} />
-      <Tabs.Screen name="monitor" options={{ title: "Monitor" }} />
-      <Tabs.Screen name="network" options={{ title: "Network" }} />
-      <Tabs.Screen name="more" options={{ title: "More" }} />
+      <Tabs.Screen name="clients" options={{ title: "Clients" }} />
+      <Tabs.Screen name="settings" options={{ title: "Settings" }} />
     </Tabs>
   );
 };

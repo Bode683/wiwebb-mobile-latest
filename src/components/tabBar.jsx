@@ -2,22 +2,21 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-nati
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../theme';
-import { PlatformIcon } from './PlatformIcon';
+import { AppIcon } from './AppIcon';
 
 const { height } = Dimensions.get('window');
 const hp = (percentage) => (height * percentage) / 100;
 
 const TAB_ICONS = {
-  dashboard:        { feather: 'grid',     symbol: 'square.grid.2x2'    },
-  devices: { feather: 'tablet',   symbol: 'laptopcomputer'     },
-  monitor:   { feather: 'activity', symbol: 'waveform.path.ecg'  },
-  network:     { feather: 'globe',    symbol: 'globe'              },
-  more:        { feather: 'menu',     symbol: 'line.3.horizontal'  },
+  dashboard: { type: 'Feather', name: 'grid',     symbol: 'square.grid.2x2' },
+  devices:   { type: 'Feather', name: 'wifi',     symbol: 'wifi'            },
+  clients:   { type: 'Feather', name: 'monitor',  symbol: 'desktopcomputer' },
+  settings:  { type: 'Feather', name: 'settings', symbol: 'gearshape'       },
 };
 
 /**
  * TabBar component renders a custom bottom tab bar.
- * Icons are driven by PlatformIcon (SF Symbols on iOS, Feather on Android).
+ * Icons are driven by AppIcon (SF Symbols on iOS, vector icons on Android).
  * Colours respond to the active theme (light/dark).
  */
 const TabBar = ({ state, descriptors, navigation }) => {
@@ -68,8 +67,9 @@ const TabBar = ({ state, descriptors, navigation }) => {
             style={styles.tab}
           >
             {iconConfig && (
-              <PlatformIcon
-                feather={iconConfig.feather}
+              <AppIcon
+                type={iconConfig.type}
+                name={iconConfig.name}
                 symbol={iconConfig.symbol}
                 size={hp(2.5)}
                 color={color}

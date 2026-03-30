@@ -1,4 +1,4 @@
 import { ComingSoonScreen } from '../../../components/ComingSoonScreen';
 export default function OrdersScreen() {
-  return <ComingSoonScreen title="Orders" feather="shopping-bag" symbol="bag" />;
+  return <ComingSoonScreen title="Orders" name="shopping-bag" symbol="bag" />;
 }

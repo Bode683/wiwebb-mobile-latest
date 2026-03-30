@@ -1,4 +1,4 @@
 import { ComingSoonScreen } from '../../../components/ComingSoonScreen';
 export default function AccountingSessionsScreen() {
-  return <ComingSoonScreen title="Accounting Sessions" feather="file-text" symbol="receipt" />;
+  return <ComingSoonScreen title="Accounting Sessions" name="file-text" symbol="receipt" />;
 }

@@ -1,4 +1,4 @@
 import { ComingSoonScreen } from '../../../components/ComingSoonScreen';
 export default function WifiSessionsScreen() {
-  return <ComingSoonScreen title="WiFi Sessions" feather="wifi" symbol="wifi" />;
+  return <ComingSoonScreen title="WiFi Sessions" name="wifi" symbol="wifi" />;
 }

@@ -10,10 +10,9 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import { Feather } from '@expo/vector-icons';
 import type { OnboardingStepProps } from '../OnboardingWizard';
 import { useTheme, typography, spacing, borderRadius } from '../../../../theme';
-import { PlatformIcon } from '../../../../components/PlatformIcon';
+import { AppIcon } from '../../../../components/AppIcon';
 
 type ConnectionStatus = 'idle' | 'polling' | 'timeout';
 
@@ -93,8 +92,9 @@ function SignalRipple({ active }: { active: boolean }) {
       <Animated.View style={[ringBase, ring1Style]} />
       {/* Center icon */}
       <View style={[styles.rippleCenter, { backgroundColor: theme.primaryContainer }]}>
-        <PlatformIcon
-          feather="radio"
+        <AppIcon
+          type="Feather"
+          name="radio"
           symbol="antenna.radiowaves.left.and.right"
           size={28}
           color={theme.primary}
@@ -198,7 +198,7 @@ export function ActivationStep({ onNext, onBack }: OnboardingStepProps) {
       {/* Timeout: notice */}
       {isTimeout && (
         <View style={[styles.noticeBox, { backgroundColor: theme.primaryContainer, borderColor: theme.primary }]}>
-          <Feather name="info" size={16} color={theme.primary} style={{ marginTop: 2 }} />
+          <AppIcon type="Feather" name="info" size={16} color={theme.primary} />
           <Text style={[typography.variants.bodyMedium, { color: theme.onPrimaryContainer, flex: 1 }]}>
             {t('activation.timeout')}
           </Text>
@@ -218,7 +218,7 @@ export function ActivationStep({ onNext, onBack }: OnboardingStepProps) {
             { borderColor: theme.outline, opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1 },
           ]}
         >
-          <PlatformIcon feather="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
+          <AppIcon type="Feather" name="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
           <Text style={[typography.variants.labelLarge, { color: theme.onSurface }]}>
             {t('common.back')}
           </Text>
@@ -234,7 +234,7 @@ export function ActivationStep({ onNext, onBack }: OnboardingStepProps) {
               { backgroundColor: theme.primary, opacity: Platform.OS === 'ios' && pressed ? 0.8 : 1 },
             ]}
           >
-            <PlatformIcon feather="activity" symbol="waveform.path.ecg" size={16} color={theme.onPrimary} />
+            <AppIcon type="Feather" name="activity" symbol="waveform.path.ecg" size={16} color={theme.onPrimary} />
             <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
               {t('activation.startMonitoring')}
             </Text>
@@ -252,7 +252,7 @@ export function ActivationStep({ onNext, onBack }: OnboardingStepProps) {
             <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
               {isPolling ? t('activation.skip') : t('common.next')}
             </Text>
-            <PlatformIcon feather="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
+            <AppIcon type="Feather" name="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
           </Pressable>
         )}
       </View>

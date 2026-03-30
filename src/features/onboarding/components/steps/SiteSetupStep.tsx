@@ -3,20 +3,20 @@ import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Platform } fr
 import { useTranslation } from 'react-i18next';
 import type { OnboardingStepProps } from '../OnboardingWizard';
 import { useTheme, typography, spacing, borderRadius } from '../../../../theme';
-import { PlatformIcon } from '../../../../components/PlatformIcon';
+import { AppIcon } from '../../../../components/AppIcon';
 
 type SiteType = 'office' | 'home' | 'retail';
 
 interface SiteTypeConfig {
   type: SiteType;
-  feather: React.ComponentProps<typeof PlatformIcon>['feather'];
+  iconName: string;
   symbol: string;
 }
 
 const SITE_TYPES: SiteTypeConfig[] = [
-  { type: 'office', feather: 'briefcase', symbol: 'building.2' },
-  { type: 'home',   feather: 'home',      symbol: 'house' },
-  { type: 'retail', feather: 'shopping-bag', symbol: 'cart' },
+  { type: 'office', iconName: 'briefcase',    symbol: 'building.2' },
+  { type: 'home',   iconName: 'home',         symbol: 'house' },
+  { type: 'retail', iconName: 'shopping-bag', symbol: 'cart' },
 ];
 
 export function SiteSetupStep({ onNext, onBack, data, isFirst }: OnboardingStepProps) {
@@ -48,7 +48,7 @@ export function SiteSetupStep({ onNext, onBack, data, isFirst }: OnboardingStepP
     >
       {/* Step icon */}
       <View style={[styles.iconWrap, { backgroundColor: theme.primaryContainer }]}>
-        <PlatformIcon feather="map-pin" symbol="mappin" size={28} color={theme.primary} />
+        <AppIcon type="Feather" name="map-pin" symbol="mappin" size={28} color={theme.primary} />
       </View>
 
       <Text style={[typography.variants.headlineSmall, { color: theme.onSurface, marginTop: spacing.md }]}>
@@ -84,7 +84,7 @@ export function SiteSetupStep({ onNext, onBack, data, isFirst }: OnboardingStepP
         {/* Site type */}
         <Text style={[styles.label, { color: theme.onSurface }]}>{t('siteSetup.siteType')}</Text>
         <View style={styles.typeRow}>
-          {SITE_TYPES.map(({ type, feather, symbol }) => {
+          {SITE_TYPES.map(({ type, iconName, symbol }) => {
             const selected = siteType === type;
             return (
               <Pressable
@@ -103,8 +103,9 @@ export function SiteSetupStep({ onNext, onBack, data, isFirst }: OnboardingStepP
                   },
                 ]}
               >
-                <PlatformIcon
-                  feather={feather}
+                <AppIcon
+                  type="Feather"
+                  name={iconName}
                   symbol={symbol}
                   size={24}
                   color={selected ? theme.primary : theme.onSurfaceVariant}
@@ -135,7 +136,7 @@ export function SiteSetupStep({ onNext, onBack, data, isFirst }: OnboardingStepP
               { borderColor: theme.outline, opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1 },
             ]}
           >
-            <PlatformIcon feather="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
+            <AppIcon type="Feather" name="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
             <Text style={[typography.variants.labelLarge, { color: theme.onSurface }]}>
               {t('common.back')}
             </Text>
@@ -157,7 +158,7 @@ export function SiteSetupStep({ onNext, onBack, data, isFirst }: OnboardingStepP
           <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
             {t('common.next')}
           </Text>
-          <PlatformIcon feather="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
+          <AppIcon type="Feather" name="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
         </Pressable>
       </View>
     </ScrollView>

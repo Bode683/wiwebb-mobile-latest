@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Platform } fr
 import { useTranslation } from 'react-i18next';
 import type { OnboardingStepProps } from '../OnboardingWizard';
 import { useTheme, typography, spacing, borderRadius } from '../../../../theme';
-import { PlatformIcon } from '../../../../components/PlatformIcon';
+import { AppIcon } from '../../../../components/AppIcon';
 import { PickerModal, PickerField } from '../PickerModal';
 
 const COUNTRIES = [
@@ -56,8 +56,9 @@ export function OrgSetupStep({ onNext, data }: OnboardingStepProps) {
     >
       {/* Step icon */}
       <View style={[styles.iconWrap, { backgroundColor: theme.primaryContainer }]}>
-        <PlatformIcon
-          feather="briefcase"
+        <AppIcon
+          type="Feather"
+          name="briefcase"
           symbol="building.2"
           size={28}
           color={theme.primary}
@@ -123,7 +124,7 @@ export function OrgSetupStep({ onNext, data }: OnboardingStepProps) {
         <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
           {t('common.next')}
         </Text>
-        <PlatformIcon feather="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
+        <AppIcon type="Feather" name="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
       </Pressable>
 
       {/* Pickers */}

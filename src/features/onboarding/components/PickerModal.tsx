@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { AppIcon } from '../../../components/AppIcon';
 import { useTheme, typography, spacing, borderRadius, shadows } from '../../../theme';
 
 export interface PickerOption<T extends string = string> {
@@ -99,7 +99,7 @@ export function PickerModal<T extends string>({
                     {item.label}
                   </Text>
                   {selected && (
-                    <Feather name="check" size={16} color={theme.primary} />
+                    <AppIcon type="Feather" name="check" size={16} color={theme.primary} />
                   )}
                 </Pressable>
               );
@@ -145,7 +145,7 @@ export function PickerField({ value, placeholder, onPress, disabled }: PickerFie
       >
         {value || placeholder}
       </Text>
-      <Feather name="chevron-down" size={16} color={theme.onSurfaceVariant} />
+      <AppIcon type="Feather" name="chevron-down" size={16} color={theme.onSurfaceVariant} />
     </Pressable>
   );
 }

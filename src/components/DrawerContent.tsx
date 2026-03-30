@@ -15,14 +15,13 @@ import {
   DrawerContentScrollView,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
-import { Feather } from '@expo/vector-icons';
 import { useRouter, usePathname } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { useTheme, typography, spacing, borderRadius } from '../theme';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { authReset } from '../features/auth/slice/authSlice';
-import { PlatformIcon } from './PlatformIcon';
+import { AppIcon } from './AppIcon';
 import { mobileNavConfig, type MobileNavItem } from '../features/navigation/nav-config';
 
 // ─── Logo assets ──────────────────────────────────────────────────────────────
@@ -94,8 +93,8 @@ function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
         ]}
       >
         <View style={styles.sectionHeaderLeft}>
-          <PlatformIcon
-            feather={item.feather}
+          <AppIcon
+            type={item.type} name={item.name}
             symbol={item.symbol}
             size={17}
             color={parentActive ? theme.sidebarPrimary : theme.onSurfaceVariant}
@@ -113,7 +112,8 @@ function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
           </Text>
         </View>
         <Animated.View style={chevronStyle}>
-          <Feather
+          <AppIcon
+            type="Feather"
             name="chevron-right"
             size={15}
             color={theme.onSurfaceVariant}
@@ -137,8 +137,8 @@ function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
                 Platform.OS === 'ios' && pressed && { opacity: 0.7 },
               ]}
             >
-              <PlatformIcon
-                feather={child.feather}
+              <AppIcon
+                type={child.type} name={child.name}
                 symbol={child.symbol}
                 size={14}
                 color={active ? theme.sidebarPrimary : theme.onSurfaceVariant}
@@ -195,8 +195,8 @@ function NavItem({ item, activePath }: NavItemProps) {
         Platform.OS === 'ios' && pressed && { opacity: 0.7 },
       ]}
     >
-      <PlatformIcon
-        feather={item.feather}
+      <AppIcon
+        type={item.type} name={item.name}
         symbol={item.symbol}
         size={17}
         color={active ? theme.sidebarPrimary : theme.onSurfaceVariant}
@@ -312,7 +312,7 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
             Platform.OS === 'ios' && pressed && { opacity: 0.7 },
           ]}
         >
-          <Feather name="log-out" size={16} color={theme.error} />
+          <AppIcon type="Feather" name="log-out" size={16} color={theme.error} />
           <Text style={[typography.variants.labelMedium, { color: theme.error, marginLeft: spacing.sm }]}>
             {t('user.signOut')}
           </Text>

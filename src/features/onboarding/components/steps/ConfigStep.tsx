@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Feather } from '@expo/vector-icons';
 import type { OnboardingStepProps } from '../OnboardingWizard';
 import { useTheme, typography, spacing, borderRadius } from '../../../../theme';
-import { PlatformIcon } from '../../../../components/PlatformIcon';
+import { AppIcon } from '../../../../components/AppIcon';
 import { PickerModal, PickerField } from '../PickerModal';
 
 type TemplateMode = 'standard' | 'custom';
@@ -19,14 +18,14 @@ const SECURITY_OPTIONS: Array<{ label: string; value: SecurityType }> = [
 
 interface ModeOption {
   mode: TemplateMode;
-  feather: React.ComponentProps<typeof PlatformIcon>['feather'];
+  name: string;
   symbol: string;
   labelKey: string;
 }
 
 const MODE_OPTIONS: ModeOption[] = [
-  { mode: 'standard', feather: 'zap',     symbol: 'bolt',               labelKey: 'config.mode.standard' },
-  { mode: 'custom',   feather: 'sliders', symbol: 'slider.horizontal.3', labelKey: 'config.mode.custom' },
+  { mode: 'standard', name: 'zap',     symbol: 'bolt',               labelKey: 'config.mode.standard' },
+  { mode: 'custom',   name: 'sliders', symbol: 'slider.horizontal.3', labelKey: 'config.mode.custom' },
 ];
 
 export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
@@ -77,7 +76,7 @@ export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
     >
       {/* Step icon */}
       <View style={[styles.iconWrap, { backgroundColor: theme.primaryContainer }]}>
-        <PlatformIcon feather="wifi" symbol="wifi" size={28} color={theme.primary} />
+        <AppIcon type="Feather" name="wifi" symbol="wifi" size={28} color={theme.primary} />
       </View>
 
       <Text style={[typography.variants.headlineSmall, { color: theme.onSurface, marginTop: spacing.md }]}>
@@ -89,7 +88,7 @@ export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
 
       {/* Mode toggle — segmented control */}
       <View style={[styles.modeRow, { borderColor: theme.outline, backgroundColor: theme.surfaceVariant }]}>
-        {MODE_OPTIONS.map(({ mode: m, feather, symbol, labelKey }) => {
+        {MODE_OPTIONS.map(({ mode: m, name, symbol, labelKey }) => {
           const active = mode === m;
           return (
             <Pressable
@@ -102,8 +101,9 @@ export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
                 Platform.OS === 'ios' && pressed && !active && { opacity: 0.7 },
               ]}
             >
-              <PlatformIcon
-                feather={feather}
+              <AppIcon
+                type="Feather"
+                name={name}
                 symbol={symbol}
                 size={16}
                 color={active ? theme.primary : theme.onSurfaceVariant}
@@ -124,7 +124,7 @@ export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
       {/* Mode content */}
       {isStandard ? (
         <View style={[styles.infoBox, { backgroundColor: theme.primaryContainer, borderColor: theme.primary }]}>
-          <Feather name="info" size={16} color={theme.primary} style={{ marginTop: 2 }} />
+          <AppIcon type="Feather" name="info" size={16} color={theme.primary} />
           <Text style={[typography.variants.bodyMedium, { color: theme.onPrimaryContainer, flex: 1 }]}>
             {t('config.standardInfo')}
           </Text>
@@ -167,7 +167,7 @@ export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
           {/* Open network warning */}
           {securityType === 'open' && (
             <View style={[styles.warnBox, { backgroundColor: theme.errorContainer, borderColor: theme.error }]}>
-              <Feather name="alert-triangle" size={15} color={theme.error} style={{ marginTop: 1 }} />
+              <AppIcon type="Feather" name="alert-triangle" size={15} color={theme.error} />
               <Text style={[typography.variants.bodySmall, { color: theme.onErrorContainer, flex: 1 }]}>
                 Open networks are visible to anyone nearby. Only use this in trusted environments.
               </Text>
@@ -198,7 +198,7 @@ export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
             { borderColor: theme.outline, opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1 },
           ]}
         >
-          <PlatformIcon feather="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
+          <AppIcon type="Feather" name="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
           <Text style={[typography.variants.labelLarge, { color: theme.onSurface }]}>
             {t('common.back')}
           </Text>
@@ -219,7 +219,7 @@ export function ConfigStep({ onNext, onBack, data }: OnboardingStepProps) {
           <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
             {t('common.next')}
           </Text>
-          <PlatformIcon feather="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
+          <AppIcon type="Feather" name="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
         </Pressable>
       </View>
 

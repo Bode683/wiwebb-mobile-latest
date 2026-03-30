@@ -10,10 +10,9 @@ import {
   Alert,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Feather } from '@expo/vector-icons';
 import type { OnboardingStepProps } from '../OnboardingWizard';
 import { useTheme, typography, spacing, borderRadius } from '../../../../theme';
-import { PlatformIcon } from '../../../../components/PlatformIcon';
+import { AppIcon } from '../../../../components/AppIcon';
 
 interface Device {
   id: string;
@@ -84,7 +83,7 @@ export function DeviceClaimStep({ onNext, onBack, data }: OnboardingStepProps) {
     >
       {/* Step icon */}
       <View style={[styles.iconWrap, { backgroundColor: theme.primaryContainer }]}>
-        <PlatformIcon feather="cpu" symbol="cpu" size={28} color={theme.primary} />
+        <AppIcon type="Feather" name="cpu" symbol="cpu" size={28} color={theme.primary} />
       </View>
 
       <Text style={[typography.variants.headlineSmall, { color: theme.onSurface, marginTop: spacing.md }]}>
@@ -161,7 +160,7 @@ export function DeviceClaimStep({ onNext, onBack, data }: OnboardingStepProps) {
               { opacity: canAdd ? (Platform.OS === 'ios' && pressed ? 0.7 : 1) : 0.4 },
             ]}
           >
-            <PlatformIcon feather="plus" symbol="plus" size={16} color={theme.primary} />
+            <AppIcon type="Feather" name="plus" symbol="plus" size={16} color={theme.primary} />
             <Text style={[typography.variants.labelLarge, { color: theme.primary }]}>
               {t('deviceClaim.addDevice')}
             </Text>
@@ -177,7 +176,7 @@ export function DeviceClaimStep({ onNext, onBack, data }: OnboardingStepProps) {
               Platform.OS === 'ios' && pressed && { opacity: 0.7 },
             ]}
           >
-            <PlatformIcon feather="camera" symbol="qrcode.viewfinder" size={20} color={theme.onSurface} />
+            <AppIcon type="Feather" name="camera" symbol="qrcode.viewfinder" size={20} color={theme.onSurface} />
           </Pressable>
         </View>
       </View>
@@ -194,7 +193,7 @@ export function DeviceClaimStep({ onNext, onBack, data }: OnboardingStepProps) {
               style={[styles.deviceRow, { borderColor: theme.outline, backgroundColor: theme.surface }]}
             >
               <View style={[styles.deviceIconWrap, { backgroundColor: theme.primaryContainer }]}>
-                <Feather name="cpu" size={14} color={theme.primary} />
+                <AppIcon type="Feather" name="cpu" size={14} color={theme.primary} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={[typography.variants.labelMedium, { color: theme.onSurface }]}>
@@ -222,7 +221,7 @@ export function DeviceClaimStep({ onNext, onBack, data }: OnboardingStepProps) {
                   Platform.OS === 'ios' && pressed && { opacity: 0.6 },
                 ]}
               >
-                <Feather name="x" size={16} color={theme.error} />
+                <AppIcon type="Feather" name="x" size={16} color={theme.error} />
               </Pressable>
             </View>
           ))}
@@ -240,7 +239,7 @@ export function DeviceClaimStep({ onNext, onBack, data }: OnboardingStepProps) {
             { borderColor: theme.outline, opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1 },
           ]}
         >
-          <PlatformIcon feather="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
+          <AppIcon type="Feather" name="arrow-left" symbol="arrow.left" size={16} color={theme.onSurface} />
           <Text style={[typography.variants.labelLarge, { color: theme.onSurface }]}>
             {t('common.back')}
           </Text>
@@ -261,7 +260,7 @@ export function DeviceClaimStep({ onNext, onBack, data }: OnboardingStepProps) {
           <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
             {t('common.next')}
           </Text>
-          <PlatformIcon feather="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
+          <AppIcon type="Feather" name="arrow-right" symbol="arrow.right" size={16} color={theme.onPrimary} />
         </Pressable>
       </View>
     </ScrollView>

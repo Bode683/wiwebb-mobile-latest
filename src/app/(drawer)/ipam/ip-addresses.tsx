@@ -1,4 +1,4 @@
 import { ComingSoonScreen } from '../../../components/ComingSoonScreen';
 export default function IpAddressesScreen() {
-  return <ComingSoonScreen title="IP Addresses" feather="globe" symbol="globe" />;
+  return <ComingSoonScreen title="IP Addresses" name="globe" symbol="globe" />;
 }

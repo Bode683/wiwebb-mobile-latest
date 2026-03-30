@@ -2,12 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, typography, spacing, borderRadius } from '../theme';
-import { PlatformIcon } from './PlatformIcon';
+import { AppIcon, type IconLibrary } from './AppIcon';
 
 interface ComingSoonScreenProps {
   title: string;
-  feather: React.ComponentProps<typeof PlatformIcon>['feather'];
+  name: string;
   symbol: string;
+  type?: IconLibrary;
 }
 
 /**
@@ -15,14 +16,14 @@ interface ComingSoonScreenProps {
  * Each route file passes its own title and icon so the screen communicates
  * context without requiring unique screen code per route.
  */
-export function ComingSoonScreen({ title, feather, symbol }: ComingSoonScreenProps) {
+export function ComingSoonScreen({ title, name, symbol, type = 'Feather' }: ComingSoonScreenProps) {
   const { t } = useTranslation('common');
   const { theme } = useTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.iconWrap, { backgroundColor: theme.primaryContainer }]}>
-        <PlatformIcon feather={feather} symbol={symbol} size={36} color={theme.primary} />
+        <AppIcon type={type} name={name} symbol={symbol} size={36} color={theme.primary} />
       </View>
 
       <Text style={[typography.variants.titleLarge, { color: theme.onSurface, marginTop: spacing.lg }]}>

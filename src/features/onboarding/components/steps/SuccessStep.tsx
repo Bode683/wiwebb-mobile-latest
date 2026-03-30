@@ -8,13 +8,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import { Feather } from '@expo/vector-icons';
 import type { OnboardingStepProps } from '../OnboardingWizard';
 import { useTheme, typography, spacing, borderRadius, springPresets } from '../../../../theme';
-import { PlatformIcon } from '../../../../components/PlatformIcon';
+import { AppIcon } from '../../../../components/AppIcon';
 
 interface SummaryItem {
-  icon: React.ComponentProps<typeof Feather>['name'];
+  icon: string;
   label: string;
 }
 
@@ -50,8 +49,9 @@ export function SuccessStep({ onNext }: OnboardingStepProps) {
         <Animated.View
           style={[styles.heroCircle, { backgroundColor: theme.primaryContainer }, heroStyle]}
         >
-          <PlatformIcon
-            feather="check-circle"
+          <AppIcon
+            type="Feather"
+            name="check-circle"
             symbol="checkmark.circle.fill"
             size={52}
             color={theme.primary}
@@ -83,10 +83,10 @@ export function SuccessStep({ onNext }: OnboardingStepProps) {
           >
             {/* Check circle */}
             <View style={[styles.checkWrap, { backgroundColor: theme.primaryContainer }]}>
-              <Feather name="check" size={13} color={theme.primary} />
+              <AppIcon type="Feather" name="check" size={13} color={theme.primary} />
             </View>
             {/* Row icon */}
-            <Feather name={icon} size={16} color={theme.onSurfaceVariant} />
+            <AppIcon type="Feather" name={icon} size={16} color={theme.onSurfaceVariant} />
             <Text style={[typography.variants.bodyMedium, { color: theme.onSurface, flex: 1 }]}>
               {label}
             </Text>
@@ -96,7 +96,7 @@ export function SuccessStep({ onNext }: OnboardingStepProps) {
 
       {/* Info notice */}
       <View style={[styles.infoBox, { backgroundColor: theme.primaryContainer, borderColor: theme.primary }]}>
-        <Feather name="info" size={15} color={theme.primary} style={{ marginTop: 2 }} />
+        <AppIcon type="Feather" name="info" size={15} color={theme.primary} />
         <Text style={[typography.variants.bodySmall, { color: theme.onPrimaryContainer, flex: 1 }]}>
           {t('success.info')}
         </Text>
@@ -119,7 +119,7 @@ export function SuccessStep({ onNext }: OnboardingStepProps) {
         <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
           {t('success.goToDashboard')}
         </Text>
-        <PlatformIcon feather="arrow-right" symbol="arrow.right" size={17} color={theme.onPrimary} />
+        <AppIcon type="Feather" name="arrow-right" symbol="arrow.right" size={17} color={theme.onPrimary} />
       </Pressable>
     </View>
   );
