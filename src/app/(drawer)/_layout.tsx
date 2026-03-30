@@ -4,6 +4,7 @@ import { Drawer } from 'expo-router/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DrawerToggleButton } from '@react-navigation/drawer';
 import DrawerContent from '../../components/DrawerContent';
+import { useTheme } from '../../theme';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const DRAWER_WIDTH = Math.min(Math.round(SCREEN_WIDTH * 0.75), 320);
@@ -19,6 +20,7 @@ const DRAWER_WIDTH = Math.min(Math.round(SCREEN_WIDTH * 0.75), 320);
  * navigation manually using the mobileNavConfig.
  */
 export default function DrawerLayout() {
+  const { theme } = useTheme();
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
@@ -26,7 +28,7 @@ export default function DrawerLayout() {
         screenOptions={{
           headerShown: false,
           drawerType: Platform.select({ ios: 'slide', android: 'front', default: 'front' }),
-          drawerStyle: { width: DRAWER_WIDTH },
+          drawerStyle: { width: DRAWER_WIDTH, backgroundColor: theme.sidebar },
           swipeEdgeWidth: 50,
           drawerHideStatusBarOnOpen: Platform.OS === 'android',
           overlayColor: 'rgba(0,0,0,0.45)',

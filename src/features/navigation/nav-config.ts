@@ -126,25 +126,4 @@ export const mobileNavConfig: MobileNavItem[] = [
     symbol: 'info.circle',
     href: '/system-info',
   },
-  // ── Utility ──────────────────────────────────────────────────────────────────
-  {
-    labelKey: 'nav.settings',
-    type: 'Feather',
-    name: 'sliders',
-    symbol: 'slider.horizontal.3',
-    children: [
-      { labelKey: 'nav.account', type: 'Feather', name: 'user',   symbol: 'person.crop.circle', href: '/settings' },
-      { labelKey: 'nav.profile', type: 'Feather', name: 'edit-2', symbol: 'pencil',             href: '/settings/profile' },
-    ],
-  },
-  {
-    labelKey: 'nav.help',
-    type: 'Feather',
-    name: 'help-circle',
-    symbol: 'questionmark.circle',
-    children: [
-      { labelKey: 'nav.contact_support', type: 'Feather', name: 'headphones', symbol: 'headphones', href: '/help/contact-support' },
-      { labelKey: 'nav.documentation',   type: 'Feather', name: 'book-open',  symbol: 'book.open',  href: '/help/documentation' },
-    ],
-  },
 ];

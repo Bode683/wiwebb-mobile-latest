@@ -18,15 +18,13 @@ import {
 import { useRouter, usePathname } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
-import { useTheme, typography, spacing, borderRadius } from '../theme';
-import { useAppSelector, useAppDispatch } from '../store/hooks';
+import Constants from 'expo-constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme, spacing } from '../theme';
+import { useAppDispatch } from '../store/hooks';
 import { authReset } from '../features/auth/slice/authSlice';
 import { AppIcon } from './AppIcon';
 import { mobileNavConfig, type MobileNavItem } from '../features/navigation/nav-config';
-
-// ─── Logo assets ──────────────────────────────────────────────────────────────
-import LogoOrange from '../assets/brand-logo/wiweeb-orange.svg';
-import LogoWhite from '../assets/brand-logo/wiweeb-white.svg';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -45,9 +43,10 @@ function isParentActive(pathname: string, item: MobileNavItem): boolean {
 interface CollapsibleSectionProps {
   item: MobileNavItem;
   activePath: string;
+  showSeparator: boolean;
 }
 
-function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
+function CollapsibleSection({ item, activePath, showSeparator }: CollapsibleSectionProps) {
   const { theme } = useTheme();
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -82,46 +81,36 @@ function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
 
   return (
     <View>
-      {/* Section header */}
       <Pressable
         onPress={toggle}
         android_ripple={{ color: 'rgba(245,158,11,0.10)' }}
         style={({ pressed }) => [
-          styles.sectionHeader,
+          styles.navItem,
           parentActive && { backgroundColor: theme.sidebarAccent },
           Platform.OS === 'ios' && pressed && { opacity: 0.7 },
         ]}
       >
-        <View style={styles.sectionHeaderLeft}>
+        <View style={[styles.iconContainer, { backgroundColor: theme.secondary }]}>
           <AppIcon
             type={item.type} name={item.name}
             symbol={item.symbol}
-            size={17}
-            color={parentActive ? theme.sidebarPrimary : theme.onSurfaceVariant}
+            size={16}
+            color={parentActive ? theme.primary : theme.onSurfaceVariant}
           />
-          <Text
-            style={[
-              typography.variants.labelLarge,
-              {
-                color: parentActive ? theme.sidebarAccentForeground : theme.sidebarForeground,
-                marginLeft: spacing.sm,
-              },
-            ]}
-          >
-            {t(item.labelKey)}
-          </Text>
         </View>
+        <Text style={[styles.navLabel, { color: theme.sidebarForeground }]}>
+          {t(item.labelKey)}
+        </Text>
         <Animated.View style={chevronStyle}>
           <AppIcon
             type="Feather"
             name="chevron-right"
-            size={15}
+            size={16}
             color={theme.onSurfaceVariant}
           />
         </Animated.View>
       </Pressable>
 
-      {/* Sub-items */}
       <Animated.View style={contentStyle}>
         {item.children?.map((child) => {
           if (!child.href) return null;
@@ -141,27 +130,24 @@ function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
                 type={child.type} name={child.name}
                 symbol={child.symbol}
                 size={14}
-                color={active ? theme.sidebarPrimary : theme.onSurfaceVariant}
+                color={active ? theme.primary : theme.onSurfaceVariant}
               />
               <Text
                 style={[
-                  typography.variants.bodyMedium,
-                  {
-                    color: active ? theme.sidebarAccentForeground : theme.onSurfaceVariant,
-                    marginLeft: spacing.sm,
-                    flex: 1,
-                  },
+                  styles.subLabel,
+                  { color: active ? theme.sidebarAccentForeground : theme.onSurfaceVariant },
                 ]}
               >
                 {t(child.labelKey)}
               </Text>
-              {active && (
-                <View style={[styles.activeIndicator, { backgroundColor: theme.sidebarPrimary }]} />
-              )}
             </Pressable>
           );
         })}
       </Animated.View>
+
+      {showSeparator && (
+        <View style={[styles.separator, { backgroundColor: theme.sidebarBorder }]} />
+      )}
     </View>
   );
 }
@@ -171,9 +157,10 @@ function CollapsibleSection({ item, activePath }: CollapsibleSectionProps) {
 interface NavItemProps {
   item: MobileNavItem;
   activePath: string;
+  showSeparator: boolean;
 }
 
-function NavItem({ item, activePath }: NavItemProps) {
+function NavItem({ item, activePath, showSeparator }: NavItemProps) {
   const { theme } = useTheme();
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -186,56 +173,47 @@ function NavItem({ item, activePath }: NavItemProps) {
   };
 
   return (
-    <Pressable
-      onPress={navigateTo}
-      android_ripple={{ color: 'rgba(245,158,11,0.10)' }}
-      style={({ pressed }) => [
-        styles.navItem,
-        active && { backgroundColor: theme.sidebarAccent },
-        Platform.OS === 'ios' && pressed && { opacity: 0.7 },
-      ]}
-    >
-      <AppIcon
-        type={item.type} name={item.name}
-        symbol={item.symbol}
-        size={17}
-        color={active ? theme.sidebarPrimary : theme.onSurfaceVariant}
-      />
-      <Text
-        style={[
-          typography.variants.labelLarge,
-          {
-            color: active ? theme.sidebarAccentForeground : theme.sidebarForeground,
-            marginLeft: spacing.sm,
-            flex: 1,
-          },
+    <View>
+      <Pressable
+        onPress={navigateTo}
+        android_ripple={{ color: 'rgba(245,158,11,0.10)' }}
+        style={({ pressed }) => [
+          styles.navItem,
+          active && { backgroundColor: theme.sidebarAccent },
+          Platform.OS === 'ios' && pressed && { opacity: 0.7 },
         ]}
       >
-        {t(item.labelKey)}
-      </Text>
-      {active && (
-        <View style={[styles.activeIndicator, { backgroundColor: theme.sidebarPrimary }]} />
+        <View style={[styles.iconContainer, { backgroundColor: theme.secondary }]}>
+          <AppIcon
+            type={item.type} name={item.name}
+            symbol={item.symbol}
+            size={16}
+            color={active ? theme.primary : theme.onSurfaceVariant}
+          />
+        </View>
+        <Text style={[styles.navLabel, { color: theme.sidebarForeground }]}>
+          {t(item.labelKey)}
+        </Text>
+      </Pressable>
+
+      {showSeparator && (
+        <View style={[styles.separator, { backgroundColor: theme.sidebarBorder }]} />
       )}
-    </Pressable>
+    </View>
   );
 }
 
 // ─── Main DrawerContent ───────────────────────────────────────────────────────
 
 export default function DrawerContent(props: DrawerContentComponentProps) {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
   const { t } = useTranslation('common');
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const user = useAppSelector((state) => state.auth.user);
+  const insets = useSafeAreaInsets();
 
-  const LogoSvg = isDark ? LogoWhite : LogoOrange;
-
-  // User avatar initials
-  const initials = user
-    ? `${user.first_name?.[0] ?? ''}${user.last_name?.[0] ?? ''}`.toUpperCase() || user.username?.[0]?.toUpperCase() || 'U'
-    : 'U';
+  const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 
   const handleSignOut = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
@@ -243,80 +221,81 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
     router.replace('/(auth)/welcome');
   };
 
-  const Divider = () => (
-    <View style={[styles.divider, { backgroundColor: theme.sidebarBorder }]} />
-  );
+  const handleOrgSelect = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push('/(modals)/org-select' as any);
+  };
+
+  const lastIndex = mobileNavConfig.length - 1;
 
   return (
     <DrawerContentScrollView
       {...props}
       showsVerticalScrollIndicator={false}
+      style={{ backgroundColor: theme.sidebar }}
       contentContainerStyle={[styles.container, { backgroundColor: theme.sidebar }]}
     >
-      {/* ── Brand header ──────────────────────────────────────────────────── */}
-      <View style={styles.brand}>
-        <View style={styles.logoWrap}>
-          <LogoSvg height={28} width={undefined} />
-        </View>
+      {/* ── Status bar spacer + network selector ─────────────────────────── */}
+      <View style={{ paddingTop: insets.top, paddingHorizontal: spacing.md, paddingBottom: spacing.sm }}>
+        <Pressable
+          onPress={handleOrgSelect}
+          android_ripple={{ color: 'rgba(245,158,11,0.10)' }}
+          style={({ pressed }) => [
+            styles.selectorCard,
+            { backgroundColor: theme.surface, borderColor: theme.outline },
+            Platform.OS === 'ios' && pressed && { opacity: 0.8 },
+          ]}
+        >
+          <View style={[styles.orgIcon, { backgroundColor: theme.primary }]}>
+            <AppIcon type="Ionicons" name="business" size={14} color="#FFFFFF" />
+          </View>
+          <Text style={[styles.networkName, { color: theme.sidebarForeground }]} numberOfLines={1}>
+            Wiweeb Network
+          </Text>
+          <AppIcon type="MaterialIcons" name="unfold-more" size={18} color={theme.onSurfaceVariant} />
+        </Pressable>
       </View>
 
-      <Divider />
-
       {/* ── Navigation items ──────────────────────────────────────────────── */}
-      <View style={styles.navSection}>
-        {mobileNavConfig.map((item) =>
+      <View style={[styles.navSection, { backgroundColor: theme.surface }]}>
+        {mobileNavConfig.map((item, index) =>
           item.children ? (
-            <CollapsibleSection key={item.labelKey} item={item} activePath={pathname} />
+            <CollapsibleSection
+              key={item.labelKey}
+              item={item}
+              activePath={pathname}
+              showSeparator={index < lastIndex}
+            />
           ) : (
-            <NavItem key={item.labelKey} item={item} activePath={pathname} />
+            <NavItem
+              key={item.labelKey}
+              item={item}
+              activePath={pathname}
+              showSeparator={index < lastIndex}
+            />
           ),
         )}
       </View>
 
-      <Divider />
-
-      {/* ── User footer ───────────────────────────────────────────────────── */}
-      <View style={styles.footer}>
-        {/* Avatar + name/email */}
-        <View style={styles.userRow}>
-          <View style={[styles.avatar, { backgroundColor: theme.primaryContainer }]}>
-            <Text style={[typography.variants.labelMedium, { color: theme.primary }]}>
-              {initials}
-            </Text>
-          </View>
-          <View style={{ flex: 1, minWidth: 0 }}>
-            <Text
-              style={[typography.variants.labelMedium, { color: theme.sidebarForeground }]}
-              numberOfLines={1}
-            >
-              {user ? `${user.first_name} ${user.last_name}`.trim() || user.username : '—'}
-            </Text>
-            {user?.email ? (
-              <Text
-                style={[typography.variants.labelSmall, { color: theme.onSurfaceVariant }]}
-                numberOfLines={1}
-              >
-                {user.email}
-              </Text>
-            ) : null}
-          </View>
-        </View>
-
-        {/* Sign out */}
+      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      <View style={[styles.footer, { backgroundColor: theme.sidebar }]}>
         <Pressable
           onPress={handleSignOut}
           android_ripple={{ color: 'rgba(239,68,68,0.10)' }}
           style={({ pressed }) => [
             styles.signOutBtn,
-            { borderColor: theme.outline },
+            { borderColor: theme.error },
             Platform.OS === 'ios' && pressed && { opacity: 0.7 },
           ]}
         >
           <AppIcon type="Feather" name="log-out" size={16} color={theme.error} />
-          <Text style={[typography.variants.labelMedium, { color: theme.error, marginLeft: spacing.sm }]}>
+          <Text style={[styles.signOutText, { color: theme.error }]}>
             {t('user.signOut')}
           </Text>
         </Pressable>
+        <Text style={[styles.versionText, { color: theme.onSurfaceVariant }]}>
+          v{appVersion}
+        </Text>
       </View>
     </DrawerContentScrollView>
   );
@@ -329,90 +308,91 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingTop: 0,
   },
-  brand: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md + 4,
+  // Selector card
+  selectorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 52,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: spacing.sm,
   },
-  logoWrap: {
-    // SVG height is fixed at 28; width is proportional
+  orgIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    marginHorizontal: spacing.md,
-    marginVertical: spacing.xs,
+  networkName: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '600',
   },
+  // Nav items
   navSection: {
-    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
   },
-  // Direct nav item
   navItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm + 1,
-    borderRadius: borderRadius.md,
-    minHeight: 44,
+    height: 52,
   },
-  // Collapsible section header
-  sectionHeader: {
-    flexDirection: 'row',
+  iconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm + 1,
-    borderRadius: borderRadius.md,
-    minHeight: 44,
   },
-  sectionHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  navLabel: {
     flex: 1,
+    fontSize: 14,
+    fontWeight: '400',
+    marginLeft: spacing.sm,
   },
-  // Sub-item
+  separator: {
+    height: StyleSheet.hairlineWidth,
+  },
+  // Sub-items
   subItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: spacing.sm,
-    marginLeft: spacing.md + 6,
-    paddingHorizontal: spacing.sm,
+    paddingLeft: spacing.md + 40,
+    paddingRight: spacing.md,
     paddingVertical: spacing.sm,
-    borderRadius: borderRadius.md,
     minHeight: 40,
+    gap: spacing.sm,
   },
-  // Active left-edge indicator
-  activeIndicator: {
-    width: 3,
-    height: 16,
-    borderRadius: 2,
-    marginLeft: spacing.xs,
+  subLabel: {
+    flex: 1,
+    fontSize: 13,
   },
   // Footer
   footer: {
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    gap: spacing.sm,
-  },
-  userRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  avatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingTop: 12,
+    paddingBottom: spacing.md,
+    gap: 12,
   },
   signOutBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    borderRadius: borderRadius.md,
-    borderWidth: StyleSheet.hairlineWidth,
-    minHeight: 44,
+    justifyContent: 'center',
+    height: 44,
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: spacing.sm,
+  },
+  signOutText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  versionText: {
+    fontSize: 11,
+    textAlign: 'center',
   },
 });
