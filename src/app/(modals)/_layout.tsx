@@ -17,7 +17,13 @@ export default function ModalLayout() {
       <Stack.Screen
         name="exampleModal"
         options={{
-          presentation: 'modal', // Make this screen appear as a modal
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name="orgSelect"
+        options={{
+          presentation: 'modal',
         }}
       />
     </Stack>

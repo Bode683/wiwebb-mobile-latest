@@ -8,10 +8,10 @@ const { height } = Dimensions.get('window');
 const hp = (percentage) => (height * percentage) / 100;
 
 const TAB_ICONS = {
-  dashboard: { type: 'Feather', name: 'grid',     symbol: 'square.grid.2x2' },
-  devices:   { type: 'Feather', name: 'wifi',     symbol: 'wifi'            },
-  clients:   { type: 'Feather', name: 'monitor',  symbol: 'desktopcomputer' },
-  settings:  { type: 'Feather', name: 'settings', symbol: 'gearshape'       },
+  dashboard: { type: 'MaterialIcons', name: 'dashboard',  symbol: 'square.grid.2x2'        },
+  devices:   { type: 'MaterialIcons', name: 'router',     symbol: 'wifi.router'             },
+  clients:   { type: 'MaterialIcons', name: 'devices',    symbol: 'laptopcomputer.and.iphone' },
+  settings:  { type: 'MaterialIcons', name: 'settings',   symbol: 'gearshape'               },
 };
 
 /**

@@ -21,8 +21,10 @@ import { useTranslation } from 'react-i18next';
 import Constants from 'expo-constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, spacing } from '../theme';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authReset } from '../features/auth/slice/authSlice';
+import { selectActiveOrganizationId } from '../features/organizations/slice/organizationSlice';
+import { useGetOrganizationsQuery } from '../features/organizations/api/organizationApi';
 import { AppIcon } from './AppIcon';
 import { mobileNavConfig, type MobileNavItem } from '../features/navigation/nav-config';
 
@@ -214,6 +216,10 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
   const insets = useSafeAreaInsets();
 
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
+  const activeOrgId = useAppSelector(selectActiveOrganizationId);
+  const { data: orgsData } = useGetOrganizationsQuery();
+  const activeOrg = orgsData?.results.find((o) => o.id === activeOrgId);
+  const orgName = activeOrg?.name ?? 'Wiweeb Network';
 
   const handleSignOut = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
@@ -223,7 +229,7 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
 
   const handleOrgSelect = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push('/(modals)/org-select' as any);
+    router.push('/(modals)/orgSelect' as any);
   };
 
   const lastIndex = mobileNavConfig.length - 1;
@@ -250,7 +256,7 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
             <AppIcon type="Ionicons" name="business" size={14} color="#FFFFFF" />
           </View>
           <Text style={[styles.networkName, { color: theme.sidebarForeground }]} numberOfLines={1}>
-            Wiweeb Network
+            {orgName}
           </Text>
           <AppIcon type="MaterialIcons" name="unfold-more" size={18} color={theme.onSurfaceVariant} />
         </Pressable>
