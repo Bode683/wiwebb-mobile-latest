@@ -31,7 +31,7 @@ export const Colors = {
     onBackground: "#262626", // --foreground
     surface: "#ffffff", // --card
     onSurface: "#262626", // --card-foreground
-    surfaceVariant: "#f9fafb", // --muted
+    surfaceVariant: "#f3f4f6", // --muted
     onSurfaceVariant: "#6b7280", // --muted-foreground
     outline: "#e5e7eb", // --border
     outlineVariant: "#e5e7eb",
