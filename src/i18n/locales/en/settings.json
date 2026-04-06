@@ -1,0 +1,104 @@
+{
+  "title": "Settings",
+  "sections": {
+    "account": "Account",
+    "more": "More"
+  },
+  "items": {
+    "profile": "Profile",
+    "security": "Security",
+    "paymentMethods": "Payment Methods",
+    "notifications": "Notifications",
+    "appearance": "Appearance",
+    "language": "Language",
+    "toolkit": "Toolkit",
+    "about": "About"
+  },
+  "signOut": "Sign Out",
+  "profile": {
+    "title": "Edit Profile",
+    "sections": {
+      "personalInfo": "Personal Information"
+    },
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "readOnly": "read only"
+    },
+    "saveChanges": "Save Changes"
+  },
+  "security": {
+    "title": "Security",
+    "sections": {
+      "authentication": "Authentication",
+      "activeSessions": "Active Sessions"
+    },
+    "changePassword": "Change Password",
+    "biometricLogin": "Biometric Login",
+    "signOutOtherSessions": "Sign Out Other Sessions",
+    "activeNow": "Active now",
+    "hoursAgo": "{{count}} hours ago",
+    "current": "Current"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "pushNotifications": "Push Notifications",
+    "pushSubtitle": "Receive alerts on this device",
+    "sections": {
+      "alertTypes": "Alert Types"
+    },
+    "alerts": {
+      "deviceOffline": "Device Offline",
+      "configFailure": "Config Failure",
+      "firmwareUpgrade": "Firmware Upgrade Results",
+      "certificateExpiry": "Certificate Expiry",
+      "radiusBatch": "RADIUS Batch Completion",
+      "systemAlerts": "System Alerts"
+    }
+  },
+  "appearance": {
+    "title": "Appearance",
+    "sections": {
+      "theme": "Theme"
+    },
+    "options": {
+      "light": "Light",
+      "lightSubtitle": "Always use light mode",
+      "dark": "Dark",
+      "darkSubtitle": "Always use dark mode",
+      "system": "System",
+      "systemSubtitle": "Follow device setting"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "options": {
+      "followSystem": "Follow System",
+      "english": "English",
+      "french": "Français"
+    }
+  },
+  "toolkit": {
+    "title": "Toolkit",
+    "items": {
+      "wifiScan": "Wi-Fi Scan",
+      "wifiInterference": "Wi-Fi Interference",
+      "speedTest": "Speed Test",
+      "pingTest": "Ping Test",
+      "signalCalibration": "Signal Calibration"
+    }
+  },
+  "about": {
+    "title": "About",
+    "appName": "Wiweeb",
+    "version": "v1.0.0 (42)",
+    "links": {
+      "termsOfUse": "Terms of Use",
+      "privacyPolicy": "Privacy Policy",
+      "documentation": "Documentation",
+      "contactSupport": "Contact Support"
+    },
+    "copyright": "Copyright © 2026 Wiweeb. All rights reserved."
+  }
+}

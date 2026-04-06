@@ -51,11 +51,6 @@ export default function DrawerLayout() {
           name="explore"
           options={{ drawerItemStyle: { display: "none" } }}
         />
-        <Drawer.Screen
-          name="settings"
-          options={{ drawerItemStyle: { display: "none" } }}
-        />
-
         {/* ── New sections — all hidden from default list ───────────────── */}
         <Drawer.Screen
           name="devices"

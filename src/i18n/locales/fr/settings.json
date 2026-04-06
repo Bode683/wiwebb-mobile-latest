@@ -1,0 +1,104 @@
+{
+  "title": "Paramètres",
+  "sections": {
+    "account": "Compte",
+    "more": "Plus"
+  },
+  "items": {
+    "profile": "Profil",
+    "security": "Sécurité",
+    "paymentMethods": "Méthodes de paiement",
+    "notifications": "Notifications",
+    "appearance": "Apparence",
+    "language": "Langue",
+    "toolkit": "Boîte à outils",
+    "about": "À propos"
+  },
+  "signOut": "Se déconnecter",
+  "profile": {
+    "title": "Modifier le profil",
+    "sections": {
+      "personalInfo": "Informations personnelles"
+    },
+    "fields": {
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "email": "E-mail",
+      "readOnly": "lecture seule"
+    },
+    "saveChanges": "Enregistrer les modifications"
+  },
+  "security": {
+    "title": "Sécurité",
+    "sections": {
+      "authentication": "Authentification",
+      "activeSessions": "Sessions actives"
+    },
+    "changePassword": "Changer le mot de passe",
+    "biometricLogin": "Connexion biométrique",
+    "signOutOtherSessions": "Déconnecter les autres sessions",
+    "activeNow": "Actif maintenant",
+    "hoursAgo": "Il y a {{count}} heures",
+    "current": "Actuel"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "pushNotifications": "Notifications push",
+    "pushSubtitle": "Recevoir des alertes sur cet appareil",
+    "sections": {
+      "alertTypes": "Types d'alertes"
+    },
+    "alerts": {
+      "deviceOffline": "Appareil hors ligne",
+      "configFailure": "Échec de configuration",
+      "firmwareUpgrade": "Résultats de mise à jour du firmware",
+      "certificateExpiry": "Expiration du certificat",
+      "radiusBatch": "Fin de traitement RADIUS en lot",
+      "systemAlerts": "Alertes système"
+    }
+  },
+  "appearance": {
+    "title": "Apparence",
+    "sections": {
+      "theme": "Thème"
+    },
+    "options": {
+      "light": "Clair",
+      "lightSubtitle": "Toujours utiliser le mode clair",
+      "dark": "Sombre",
+      "darkSubtitle": "Toujours utiliser le mode sombre",
+      "system": "Système",
+      "systemSubtitle": "Suivre les paramètres de l'appareil"
+    }
+  },
+  "language": {
+    "title": "Langue",
+    "options": {
+      "followSystem": "Suivre le système",
+      "english": "English",
+      "french": "Français"
+    }
+  },
+  "toolkit": {
+    "title": "Boîte à outils",
+    "items": {
+      "wifiScan": "Scan Wi-Fi",
+      "wifiInterference": "Interférence Wi-Fi",
+      "speedTest": "Test de vitesse",
+      "pingTest": "Test Ping",
+      "signalCalibration": "Calibration du signal"
+    }
+  },
+  "about": {
+    "title": "À propos",
+    "appName": "Wiweeb",
+    "version": "v1.0.0 (42)",
+    "links": {
+      "termsOfUse": "Conditions d'utilisation",
+      "privacyPolicy": "Politique de confidentialité",
+      "documentation": "Documentation",
+      "contactSupport": "Contacter le support"
+    },
+    "copyright": "Copyright © 2026 Wiweeb. Tous droits réservés."
+  }
+}

@@ -3,12 +3,14 @@ import enCommon from './locales/en/common.json';
 import enOnboarding from './locales/en/onboarding.json';
 import enHome from './locales/en/Home.json';
 import enAuth from './locales/en/auth.json';
+import enSettings from './locales/en/settings.json';
 
 // French namespaces
 import frCommon from './locales/fr/common.json';
 import frOnboarding from './locales/fr/onboarding.json';
 import frHome from './locales/fr/Home.json';
 import frAuth from './locales/fr/auth.json';
+import frSettings from './locales/fr/settings.json';
 
 export const defaultLanguage = 'en';
 
@@ -18,11 +20,13 @@ export const languagesResources = {
     onboarding: enOnboarding,
     Home: enHome,
     auth: enAuth,
+    settings: enSettings,
   },
   fr: {
     common: frCommon,
     onboarding: frOnboarding,
     Home: frHome,
     auth: frAuth,
+    settings: frSettings,
   },
 };
