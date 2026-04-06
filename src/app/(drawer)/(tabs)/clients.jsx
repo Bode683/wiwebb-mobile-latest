@@ -1,18 +1,4 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import { useTheme, typography, spacing } from '../../../theme';
-
-const Clients = () => {
-  const { theme } = useTheme();
-
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background, padding: spacing.md }}>
-      <Text style={[typography.variants.titleMedium, { color: theme.onBackground }]}>Clients</Text>
-      <Text style={[typography.variants.bodyMedium, { color: theme.onSurfaceVariant, marginTop: spacing.xs }]}>
-        Client management coming soon.
-      </Text>
-    </View>
-  );
-};
-
-export default Clients;
+import { ComingSoonScreen } from '../../../components/ComingSoonScreen';
+export default function ClientsScreen() {
+  return <ComingSoonScreen title="Clients" name="monitor" symbol="laptopcomputer.and.iphone" />;
+}
