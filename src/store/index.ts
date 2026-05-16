@@ -18,6 +18,7 @@ import { baseApi } from './api/baseApi';
 import authReducer from '../features/auth/slice/authSlice';
 import onboardingReducer from '../features/onboarding/slice/onboardingSlice';
 import organizationReducer from '../features/organizations/slice/organizationSlice';
+import paymentMethodsReducer from './slices/paymentMethods';
 
 const rootReducer = combineReducers({
   message: messageReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   onboarding: onboardingReducer,
   organization: organizationReducer,
+  paymentMethods: paymentMethodsReducer,
   [colorsApi.reducerPath]: colorsApi.reducer,
   [baseApi.reducerPath]: baseApi.reducer,
 });
@@ -35,7 +37,7 @@ const persistConfig = {
   storage: reduxStorage,
   // Auth is NOT persisted — token lives in SecureStore, user re-fetched via getMe.
   // colorsApi and baseApi manage their own cache lifecycle.
-  whitelist: ['message', 'onboarding', 'organization'],
+  whitelist: ['message', 'onboarding', 'organization', 'paymentMethods'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

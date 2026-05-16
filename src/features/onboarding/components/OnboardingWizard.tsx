@@ -10,7 +10,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAppDispatch } from "../../../store/hooks";
 import { spacing, useTheme } from "../../../theme";
-import { completeOnboarding } from "../slice/onboardingSlice";
+import { completeOnboarding, saveOnboardingResult } from "../slice/onboardingSlice";
 import { ProgressBar } from "./ProgressBar";
 import { ActivationStep } from "./steps/ActivationStep";
 import { ConfigStep } from "./steps/ConfigStep";
@@ -77,18 +77,29 @@ export function OnboardingWizard() {
 
   const handleNext = useCallback(
     (stepData?: Record<string, any>) => {
+      const merged = stepData ? { ...wizardData, ...stepData } : wizardData;
       if (stepData) {
-        setWizardData((prev) => ({ ...prev, ...stepData }));
+        setWizardData(merged);
       }
       if (currentStep === TOTAL_STEPS - 1) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        dispatch(
+          saveOnboardingResult({
+            orgName: merged.orgName,
+            configMode: merged.configMode ?? 'standard',
+            ssid: merged.ssid,
+            wifiPassword: merged.wifiPassword,
+            securityType: merged.securityType,
+            vlanId: merged.vlanId ?? null,
+          }),
+        );
         dispatch(completeOnboarding());
       } else {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         animateTransition(currentStep + 1, true);
       }
     },
-    [currentStep, dispatch, animateTransition],
+    [currentStep, dispatch, animateTransition, wizardData],
   );
 
   const handleBack = useCallback(() => {

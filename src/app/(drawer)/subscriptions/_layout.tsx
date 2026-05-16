@@ -7,9 +7,9 @@ export const unstable_settings = { initialRouteName: 'plans' };
 export default function SubscriptionsLayout() {
   return (
     <Stack screenOptions={{ headerLeft: () => <DrawerToggleButton /> }}>
-      <Stack.Screen name="plans" />
-      <Stack.Screen name="orders" />
-      <Stack.Screen name="payments" />
+      <Stack.Screen name="plans" options={{ title: 'PassPlans' }} />
+      <Stack.Screen name="orders" options={{ title: 'Orders' }} />
+      <Stack.Screen name="payments" options={{ title: 'Payments' }} />
     </Stack>
   );
 }
