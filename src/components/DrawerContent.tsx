@@ -5,7 +5,7 @@ import {
 import Constants from "expo-constants";
 import * as Haptics from "expo-haptics";
 import { usePathname, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -17,9 +17,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { authReset } from "../features/auth/slice/authSlice";
 import {
   mobileNavConfig,
+  filterNavByPermission,
   type MobileNavItem,
 } from "../features/navigation/nav-config";
-import { useGetOrganizationsQuery } from "../features/organizations/api/organizationApi";
+import { useRbac } from "../features/auth/hooks/useRbac";
+import { ROLE_LABELS } from "../features/auth/rbac";
+import { useVisibleOrganizations } from "../features/organizations/hooks/useVisibleOrganizations";
 import { selectActiveOrganizationId } from "../features/organizations/slice/organizationSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { spacing, useTheme } from "../theme";
@@ -238,9 +241,15 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
 
   const appVersion = Constants.expoConfig?.version ?? "1.0.0";
   const activeOrgId = useAppSelector(selectActiveOrganizationId);
-  const { data: orgsData } = useGetOrganizationsQuery();
-  const activeOrg = orgsData?.results.find((o) => o.id === activeOrgId);
+  const { organizations } = useVisibleOrganizations();
+  const activeOrg = organizations.find((o) => o.id === activeOrgId);
   const orgName = activeOrg?.name ?? "Wiweeb Network";
+
+  const { role, can } = useRbac();
+  const navItems = useMemo(
+    () => filterNavByPermission(mobileNavConfig, can),
+    [can],
+  );
 
   const handleSignOut = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
@@ -253,7 +262,7 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
     router.push("/(modals)/orgSelect" as any);
   };
 
-  const lastIndex = mobileNavConfig.length - 1;
+  const lastIndex = navItems.length - 1;
 
   return (
     <DrawerContentScrollView
@@ -303,11 +312,24 @@ export default function DrawerContent(props: DrawerContentComponentProps) {
             color={theme.onSurfaceVariant}
           />
         </Pressable>
+
+        {/* Current role badge */}
+        <View style={[styles.roleBadge, { backgroundColor: theme.primaryContainer }]}>
+          <AppIcon
+            type="Feather"
+            name="shield"
+            size={11}
+            color={theme.onPrimaryContainer}
+          />
+          <Text style={[styles.roleBadgeText, { color: theme.onPrimaryContainer }]}>
+            {ROLE_LABELS[role]}
+          </Text>
+        </View>
       </View>
 
       {/* ── Navigation items ──────────────────────────────────────────────── */}
       <View style={[styles.navSection, { backgroundColor: theme.surface }]}>
-        {mobileNavConfig.map((item, index) =>
+        {navItems.map((item, index) =>
           item.children ? (
             <CollapsibleSection
               key={item.labelKey}
@@ -382,6 +404,20 @@ const styles = StyleSheet.create({
   networkName: {
     flex: 1,
     fontSize: 14,
+    fontWeight: "600",
+  },
+  roleBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    gap: 4,
+    marginTop: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+    borderRadius: 999,
+  },
+  roleBadgeText: {
+    fontSize: 11,
     fontWeight: "600",
   },
   // Nav items

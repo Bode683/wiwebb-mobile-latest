@@ -29,6 +29,13 @@ const RootLayout = () => {
         />
 
         <Stack.Screen
+          name="(public)"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
           name="(onboarding)"
           options={{
             headerShown: false,

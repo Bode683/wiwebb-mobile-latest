@@ -5,36 +5,57 @@ import {
   authReady,
   authError,
   authReset,
-  setUser,
   selectAuth,
 } from '../slice/authSlice';
+import {
+  setActiveOrganization,
+  selectActiveOrganizationId,
+} from '../../organizations/slice/organizationSlice';
 import { getAccessToken, clearTokens } from '../utils/tokenStorage';
-import { MOCK_AUTH_ENABLED, mockLogin, mockLogout, MOCK_USER } from '../utils/mockAuth';
+import { MOCK_AUTH_ENABLED, mockLogin, mockLogout } from '../utils/mockAuth';
 import { useLazyGetMeQuery } from '../api/authApi';
+import { defaultActiveOrgId } from '../rbac';
+import type { User } from '../../../types/api';
 
 export function useAuth() {
   const dispatch = useAppDispatch();
   const authState = useAppSelector(selectAuth);
+  const activeOrgId = useAppSelector(selectActiveOrganizationId);
   const [triggerGetMe] = useLazyGetMeQuery();
 
+  // Ensure the active org is one the user actually belongs to.
+  const ensureActiveOrg = useCallback(
+    (user: User) => {
+      const memberIds = user.organization_users?.map((o) => o.organization) ?? [];
+      const valid =
+        activeOrgId && (user.is_superuser || memberIds.includes(activeOrgId));
+      if (!valid) {
+        dispatch(setActiveOrganization(defaultActiveOrgId(user)));
+      }
+    },
+    [dispatch, activeOrgId],
+  );
+
   const login = useCallback(
-    async (email: string, password: string) => {
+    async (identifier: string, password: string) => {
       dispatch(authLoading());
       try {
         if (MOCK_AUTH_ENABLED) {
-          const user = await mockLogin(email, password);
-          dispatch(setUser(user));
-          dispatch(authReady(true));
+          await mockLogin(identifier, password);
         } else {
           // Real OAuth flow will go here (expo-auth-session + Keycloak)
           throw new Error('Real auth not implemented yet');
         }
+        // Profile always comes from the backend (getMe dispatches setUser).
+        const user = await triggerGetMe().unwrap();
+        ensureActiveOrg(user);
+        dispatch(authReady(true));
       } catch (err) {
         dispatch(authError());
         throw err;
       }
     },
-    [dispatch],
+    [dispatch, triggerGetMe, ensureActiveOrg],
   );
 
   const logout = useCallback(async () => {
@@ -54,22 +75,15 @@ export function useAuth() {
         dispatch(authReady(false));
         return;
       }
-
-      if (MOCK_AUTH_ENABLED) {
-        // In dev, if we have a token, assume authenticated with mock user
-        dispatch(setUser(MOCK_USER));
-        dispatch(authReady(true));
-      } else {
-        // Validate token by calling /auth/me/
-        const result = await triggerGetMe().unwrap();
-        dispatch(setUser(result));
-        dispatch(authReady(true));
-      }
+      // Re-hydrate identity from the backend (works for mock + real).
+      const user = await triggerGetMe().unwrap();
+      ensureActiveOrg(user);
+      dispatch(authReady(true));
     } catch {
       await clearTokens();
       dispatch(authReady(false));
     }
-  }, [dispatch, triggerGetMe]);
+  }, [dispatch, triggerGetMe, ensureActiveOrg]);
 
   return {
     ...authState,

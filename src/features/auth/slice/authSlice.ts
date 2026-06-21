@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { User } from '../../../types/api';
+import type { User, OrganizationUser } from '../../../types/api';
 import type { RootState } from '../../../store';
 
 type AuthStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -41,14 +41,34 @@ const authSlice = createSlice({
       state.user = null;
       state.profileLoaded = false;
     },
+    /** Append a tenant membership locally (e.g. after creating an org in onboarding). */
+    addOrganizationMembership(state, action: PayloadAction<OrganizationUser>) {
+      if (!state.user) return;
+      const exists = state.user.organization_users?.some(
+        (o) => o.organization === action.payload.organization,
+      );
+      if (!exists) {
+        state.user.organization_users = [
+          ...(state.user.organization_users ?? []),
+          action.payload,
+        ];
+      }
+    },
     authReset() {
       return initialState;
     },
   },
 });
 
-export const { authLoading, authReady, authError, setUser, clearUser, authReset } =
-  authSlice.actions;
+export const {
+  authLoading,
+  authReady,
+  authError,
+  setUser,
+  clearUser,
+  addOrganizationMembership,
+  authReset,
+} = authSlice.actions;
 
 export const selectAuth = (state: RootState) => state.auth;
 export const selectUser = (state: RootState) => state.auth.user;

@@ -11,7 +11,15 @@ export const organizationApi = baseApi.injectEndpoints({
       query: (id) => `/users/organization/${id}/`,
       providesTags: (_result, _error, id) => [{ type: 'Organization', id }],
     }),
+    createOrganization: builder.mutation<Organization, Partial<Organization>>({
+      query: (body) => ({ url: '/users/organization/', method: 'POST', body }),
+      invalidatesTags: ['Organization'],
+    }),
   }),
 });
 
-export const { useGetOrganizationsQuery, useGetOrganizationByIdQuery } = organizationApi;
+export const {
+  useGetOrganizationsQuery,
+  useGetOrganizationByIdQuery,
+  useCreateOrganizationMutation,
+} = organizationApi;

@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, spacing } from '../../theme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setActiveOrganization, selectActiveOrganizationId } from '../../features/organizations/slice/organizationSlice';
-import { useGetOrganizationsQuery } from '../../features/organizations/api/organizationApi';
+import { useVisibleOrganizations } from '../../features/organizations/hooks/useVisibleOrganizations';
 import { AppIcon } from '../../components/AppIcon';
 import type { Organization } from '../../types/api';
 
@@ -24,8 +24,7 @@ export default function OrgSelectModal() {
   const dispatch = useAppDispatch();
   const activeOrgId = useAppSelector(selectActiveOrganizationId);
 
-  const { data, isLoading, isError } = useGetOrganizationsQuery();
-  const orgs = data?.results ?? [];
+  const { organizations: orgs, isLoading, isError } = useVisibleOrganizations();
 
   const handleSelect = (org: Organization) => {
     dispatch(setActiveOrganization(org.id));

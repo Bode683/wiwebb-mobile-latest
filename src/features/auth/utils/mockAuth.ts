@@ -1,56 +1,37 @@
-import type { User } from '../../../types/api';
 import { setAccessToken, setRefreshToken, clearTokens } from './tokenStorage';
 
+/**
+ * Dev auth: still bypasses real Keycloak OAuth, but now goes over the network
+ * to the Mockoon stack — `users/token/` returns a role-specific JWT and the
+ * profile is fetched from `auth/me/`. No more hardcoded MOCK_USER.
+ */
 export const MOCK_AUTH_ENABLED = __DEV__;
 
-export const MOCK_USER: User = {
-  id: 'mock-user-001',
-  username: 'devuser',
-  first_name: 'Dev',
-  last_name: 'User',
-  email: 'dev@mock.local',
-  bio: '',
-  url: '',
-  company: 'wiweeb',
-  location: '',
-  phone_number: null,
-  birth_date: null,
-  notes: '',
-  is_active: true,
-  is_staff: false,
-  is_superuser: false,
-  last_login: null,
-  date_joined: new Date().toISOString(),
-  groups: [],
-  user_permissions: [],
-  organization_users: null,
-};
+const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'https://api.wiweeb.com';
 
-function buildFakeJwt(): string {
-  const header = btoa(JSON.stringify({ alg: 'none', typ: 'JWT' }));
-  const now = Math.floor(Date.now() / 1000);
-  const payload = btoa(
-    JSON.stringify({
-      sub: MOCK_USER.id,
-      email: MOCK_USER.email,
-      name: `${MOCK_USER.first_name} ${MOCK_USER.last_name}`,
-      preferred_username: MOCK_USER.username,
-      realm_access: { roles: ['user'] },
-      iat: now,
-      exp: now + 86400,
-    }),
-  );
-  return `${header}.${payload}.mock-signature`;
-}
-
+/**
+ * POST credentials to the token endpoint and persist the returned token.
+ * Any password is accepted by the mock; the username selects the role
+ * account (superadmin / delegate / admin / viewer).
+ */
 export async function mockLogin(
-  _email: string,
+  identifier: string,
   _password: string,
-): Promise<User> {
-  const token = buildFakeJwt();
-  await setAccessToken(token);
-  await setRefreshToken(`refresh-${token}`);
-  return MOCK_USER;
+): Promise<void> {
+  const res = await fetch(`${API_BASE}/users/token/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: identifier, password: _password }),
+  });
+  if (!res.ok) {
+    throw new Error(`Login failed (${res.status})`);
+  }
+  const data = (await res.json()) as { token?: string };
+  if (!data.token) {
+    throw new Error('Login failed: no token in response');
+  }
+  await setAccessToken(data.token);
+  await setRefreshToken(`refresh-${data.token}`);
 }
 
 export async function mockLogout(): Promise<void> {

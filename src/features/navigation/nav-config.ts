@@ -1,4 +1,5 @@
 import type { IconLibrary } from '../../components/AppIcon';
+import type { Action } from '../auth/rbac';
 
 export interface MobileNavItem {
   /** i18n key in the 'common' namespace */
@@ -13,6 +14,11 @@ export interface MobileNavItem {
   href?: string;
   /** Sub-items — present on collapsible sections */
   children?: MobileNavItem[];
+  /**
+   * Role-axis gate: if set, the item is hidden unless the user `can` perform
+   * this action. Parent groups are hidden when all children are gated out.
+   */
+  requires?: Action;
 }
 
 /**
@@ -35,10 +41,10 @@ export const mobileNavConfig: MobileNavItem[] = [
     name: 'users',
     symbol: 'person.2',
     children: [
-      { labelKey: 'nav.users',              type: 'Feather', name: 'user',       symbol: 'person',                  href: '/users' },
+      { labelKey: 'nav.users',              type: 'Feather', name: 'user',       symbol: 'person',                  href: '/users',              requires: 'manage_users' },
       { labelKey: 'nav.organizations',      type: 'Feather', name: 'briefcase',  symbol: 'building.2',              href: '/organizations' },
-      { labelKey: 'nav.groups_permissions', type: 'Feather', name: 'shield',     symbol: 'checkmark.shield',        href: '/groups' },
-      { labelKey: 'nav.organization_users', type: 'Feather', name: 'user-check', symbol: 'person.badge.checkmark',  href: '/organization-users' },
+      { labelKey: 'nav.groups_permissions', type: 'Feather', name: 'shield',     symbol: 'checkmark.shield',        href: '/groups',             requires: 'manage_roles' },
+      { labelKey: 'nav.organization_users', type: 'Feather', name: 'user-check', symbol: 'person.badge.checkmark',  href: '/organization-users', requires: 'manage_users' },
     ],
   },
   {
@@ -47,7 +53,7 @@ export const mobileNavConfig: MobileNavItem[] = [
     name: 'credit-card',
     symbol: 'creditcard',
     children: [
-      { labelKey: 'nav.plans',    type: 'Feather', name: 'layers',       symbol: 'square.3.layers.3d',  href: '/subscriptions/plans' },
+      { labelKey: 'nav.plans',    type: 'Feather', name: 'layers',       symbol: 'square.3.layers.3d',  href: '/subscriptions/plans', requires: 'manage_plans' },
       { labelKey: 'nav.orders',   type: 'Feather', name: 'shopping-bag', symbol: 'bag',                 href: '/subscriptions/orders' },
       { labelKey: 'nav.payments', type: 'Feather', name: 'dollar-sign',  symbol: 'banknote',            href: '/subscriptions/payments' },
     ],
@@ -127,3 +133,25 @@ export const mobileNavConfig: MobileNavItem[] = [
     href: '/system-info',
   },
 ];
+
+/**
+ * Filter the nav tree by the role axis. An item with `requires` is dropped
+ * unless `can(action)` is true; parent groups are dropped when every child
+ * is filtered out.
+ */
+export function filterNavByPermission(
+  items: MobileNavItem[],
+  can: (action: Action) => boolean,
+): MobileNavItem[] {
+  return items.reduce<MobileNavItem[]>((acc, item) => {
+    if (item.requires && !can(item.requires)) return acc;
+    if (item.children) {
+      const children = filterNavByPermission(item.children, can);
+      if (children.length === 0) return acc;
+      acc.push({ ...item, children });
+    } else {
+      acc.push(item);
+    }
+    return acc;
+  }, []);
+}

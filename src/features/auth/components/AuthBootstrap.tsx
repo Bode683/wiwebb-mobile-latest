@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useAuth } from '../hooks/useAuth';
 import { useAppSelector } from '../../../store/hooks';
 import { selectOnboardingCompleted } from '../../onboarding/slice/onboardingSlice';
+import { memberOrgIds } from '../rbac';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,14 +29,24 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
 
     const inAuthGroup = segments[0] === '(auth)';
     const inOnboardingGroup = segments[0] === '(onboarding)';
+    // Public routes (e.g. accept-invite) are reachable without auth and must
+    // never trigger a redirect.
+    const inPublicGroup = segments[0] === '(public)';
+
+    if (inPublicGroup) {
+      SplashScreen.hideAsync();
+      return;
+    }
 
     if (!isAuthenticated) {
       if (!inAuthGroup) {
         router.replace('/(auth)/welcome' as any);
       }
     } else {
-      const ownsOrg = user?.organization_users?.is_admin === true;
-      const needsOnboarding = !onboardingCompleted && !ownsOrg;
+      // Multi-tenant: a user who belongs to no org is sent to onboarding to
+      // create their first tenant; membership comes from the backend.
+      const belongsToAnyOrg = memberOrgIds(user).length > 0;
+      const needsOnboarding = !onboardingCompleted && !belongsToAnyOrg;
 
       if (needsOnboarding) {
         if (!inOnboardingGroup) {

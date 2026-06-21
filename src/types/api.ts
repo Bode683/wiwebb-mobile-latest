@@ -3,6 +3,7 @@
 export interface OrganizationUser {
   is_admin: boolean;
   organization: string; // UUID
+  is_owner?: boolean;
 }
 
 export interface User {
@@ -25,8 +26,47 @@ export interface User {
   date_joined: string;
   groups: number[];
   user_permissions: string[];
-  organization_users: OrganizationUser | null;
+  /**
+   * Tenant memberships. Multi-tenant: a user may belong to several
+   * organizations and manage only those. Real OpenWISP returns a list.
+   */
+  organization_users: OrganizationUser[];
   email_verified?: boolean;
+  /** Invite lifecycle: "active" once accepted, "pending" while invited. */
+  status?: 'active' | 'pending';
+  /** Opaque token used by the public accept-invite route. */
+  invite_token?: string | null;
+}
+
+// ── Site types (controller/location) ─────────────────────────────────
+
+export type LocationType = 'outdoor' | 'indoor';
+
+export interface Site {
+  id: string;
+  name: string;
+  slug: string;
+  address: string;
+  location_type: LocationType;
+  is_mobile: boolean;
+  geometry: unknown | null;
+  organization: string; // UUID
+  created: string;
+  modified: string;
+}
+
+export interface PaginatedSiteList {
+  results: Site[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
+export interface PaginatedUserList {
+  results: User[];
+  count: number;
+  next: string | null;
+  previous: string | null;
 }
 
 // ── Organization types ───────────────────────────────────────────────
