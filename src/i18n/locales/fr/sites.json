@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "Sites",
+    "empty": "Aucun site dans cette organisation pour le moment.",
+    "noActiveOrg": "Sélectionnez une organisation pour voir ses sites.",
+    "add": "Ajouter un site",
+    "error": "Impossible de charger les sites."
+  },
+  "locationType": {
+    "outdoor": "Extérieur",
+    "indoor": "Intérieur"
+  },
+  "mobile": "Mobile",
+  "form": {
+    "addTitle": "Ajouter un site",
+    "editTitle": "Modifier le site",
+    "name": "Nom",
+    "namePlaceholder": "ex. Campus principal",
+    "address": "Adresse",
+    "addressPlaceholder": "Adresse postale (facultatif)",
+    "locationType": "Type de lieu",
+    "isMobile": "Unité mobile",
+    "save": "Enregistrer",
+    "create": "Créer le site",
+    "nameRequired": "Le nom est obligatoire.",
+    "error": "Impossible d'enregistrer le site."
+  },
+  "detail": {
+    "title": "Site",
+    "address": "Adresse",
+    "locationType": "Type",
+    "organization": "Organisation",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer ce site ?",
+    "deleteMessage": "Cette action est irréversible.",
+    "deleteOk": "Supprimer",
+    "deleteCancel": "Annuler",
+    "deleteError": "Impossible de supprimer le site."
+  }
+}

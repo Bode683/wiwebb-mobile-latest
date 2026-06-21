@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "Sites",
+    "empty": "No sites in this organization yet.",
+    "noActiveOrg": "Select an organization to view its sites.",
+    "add": "Add site",
+    "error": "Couldn't load sites."
+  },
+  "locationType": {
+    "outdoor": "Outdoor",
+    "indoor": "Indoor"
+  },
+  "mobile": "Mobile",
+  "form": {
+    "addTitle": "Add site",
+    "editTitle": "Edit site",
+    "name": "Name",
+    "namePlaceholder": "e.g. Main Campus",
+    "address": "Address",
+    "addressPlaceholder": "Street address (optional)",
+    "locationType": "Location type",
+    "isMobile": "Mobile unit",
+    "save": "Save",
+    "create": "Create site",
+    "nameRequired": "Name is required.",
+    "error": "Couldn't save the site."
+  },
+  "detail": {
+    "title": "Site",
+    "address": "Address",
+    "locationType": "Type",
+    "organization": "Organization",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this site?",
+    "deleteMessage": "This cannot be undone.",
+    "deleteOk": "Delete",
+    "deleteCancel": "Cancel",
+    "deleteError": "Couldn't delete the site."
+  }
+}
