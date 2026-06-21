@@ -1,0 +1,33 @@
+{
+  "list": {
+    "title": "Commandes",
+    "empty": "Aucune commande pour cette organisation.",
+    "noActiveOrg": "Sélectionnez une organisation pour voir ses commandes.",
+    "error": "Impossible de charger les commandes."
+  },
+  "status": {
+    "pending": "En attente",
+    "completed": "Complétée",
+    "failed": "Échouée"
+  },
+  "payment": {
+    "title": "Paiement",
+    "status": {
+      "pending": "En attente",
+      "success": "Payé",
+      "failed": "Échoué"
+    },
+    "via": "via"
+  },
+  "detail": {
+    "reference": "Référence",
+    "plan": "Forfait",
+    "user": "Client",
+    "amount": "Montant",
+    "status": "Statut",
+    "paymentMethod": "Moyen de paiement",
+    "transactionId": "ID de transaction",
+    "paidAt": "Payé le",
+    "none": "—"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "list": {
+    "title": "Plans",
+    "empty": "No plans configured for this organization yet.",
+    "noActiveOrg": "Select an organization to view its plans.",
+    "add": "Add plan",
+    "error": "Couldn't load plans."
+  },
+  "family": {
+    "FPU": "Fixed Price",
+    "PPU": "Pay Per Use"
+  },
+  "duration": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "activate": "Activate",
+  "deactivate": "Deactivate",
+  "form": {
+    "addTitle": "Add plan",
+    "editTitle": "Edit plan",
+    "name": "Name",
+    "namePlaceholder": "e.g. Basic Daily",
+    "family": "Plan type",
+    "duration": "Duration",
+    "durationNone": "N/A (data-volume)",
+    "speedCap": "Speed cap (Mbps)",
+    "deviceLimit": "Device limit",
+    "price": "Price",
+    "currency": "Currency",
+    "save": "Save",
+    "nameRequired": "Name is required.",
+    "priceRequired": "Price is required.",
+    "error": "Couldn't save the plan."
+  },
+  "detail": {
+    "speed": "Speed",
+    "devices": "Max devices",
+    "price": "Price",
+    "organization": "Organization",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this plan?",
+    "deleteMessage": "This cannot be undone.",
+    "deleteOk": "Delete",
+    "deleteCancel": "Cancel",
+    "deleteError": "Couldn't delete the plan."
+  }
+}

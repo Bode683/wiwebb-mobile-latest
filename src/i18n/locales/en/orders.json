@@ -1,0 +1,33 @@
+{
+  "list": {
+    "title": "Orders",
+    "empty": "No orders for this organization yet.",
+    "noActiveOrg": "Select an organization to view its orders.",
+    "error": "Couldn't load orders."
+  },
+  "status": {
+    "pending": "Pending",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "payment": {
+    "title": "Payment",
+    "status": {
+      "pending": "Pending",
+      "success": "Paid",
+      "failed": "Failed"
+    },
+    "via": "via"
+  },
+  "detail": {
+    "reference": "Reference",
+    "plan": "Plan",
+    "user": "Customer",
+    "amount": "Amount",
+    "status": "Status",
+    "paymentMethod": "Payment method",
+    "transactionId": "Transaction ID",
+    "paidAt": "Paid at",
+    "none": "—"
+  }
+}

@@ -11,7 +11,7 @@ i18n
     resources: languagesResources,
     fallbackLng: defaultLanguage,
 
-    ns: ['common', 'onboarding', 'Home', 'auth', 'settings', 'users', 'sites'],
+    ns: ['common', 'onboarding', 'Home', 'auth', 'settings', 'users', 'sites', 'devices', 'plans', 'payment-providers', 'orders'],
     defaultNS: 'common',
 
     interpolation: {

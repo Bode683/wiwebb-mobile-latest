@@ -1,0 +1,53 @@
+{
+  "list": {
+    "title": "Forfaits",
+    "empty": "Aucun forfait configuré pour cette organisation.",
+    "noActiveOrg": "Sélectionnez une organisation pour voir ses forfaits.",
+    "add": "Ajouter un forfait",
+    "error": "Impossible de charger les forfaits."
+  },
+  "family": {
+    "FPU": "Prix fixe",
+    "PPU": "Paiement à l'usage"
+  },
+  "duration": {
+    "daily": "Journalier",
+    "weekly": "Hebdomadaire",
+    "monthly": "Mensuel"
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "activate": "Activer",
+  "deactivate": "Désactiver",
+  "form": {
+    "addTitle": "Ajouter un forfait",
+    "editTitle": "Modifier le forfait",
+    "name": "Nom",
+    "namePlaceholder": "ex. Basique Journalier",
+    "family": "Type de forfait",
+    "duration": "Durée",
+    "durationNone": "N/A (volume de données)",
+    "speedCap": "Vitesse max (Mbps)",
+    "deviceLimit": "Limite d'appareils",
+    "price": "Prix",
+    "currency": "Devise",
+    "save": "Enregistrer",
+    "nameRequired": "Le nom est requis.",
+    "priceRequired": "Le prix est requis.",
+    "error": "Impossible d'enregistrer le forfait."
+  },
+  "detail": {
+    "speed": "Vitesse",
+    "devices": "Appareils max",
+    "price": "Prix",
+    "organization": "Organisation",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer ce forfait ?",
+    "deleteMessage": "Cette action est irréversible.",
+    "deleteOk": "Supprimer",
+    "deleteCancel": "Annuler",
+    "deleteError": "Impossible de supprimer le forfait."
+  }
+}

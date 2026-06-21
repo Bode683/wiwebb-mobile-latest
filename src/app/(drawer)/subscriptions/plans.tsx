@@ -1,519 +1,231 @@
-import React, { useMemo, useState } from 'react';
-import { useRouter } from 'expo-router';
+/**
+ * Admin plan configuration screen (Phase 4).
+ *
+ * The previous subscribe/checkout UI (tier picker + confirm modal) has been
+ * lifted out and will live in the captive portal (next effort). It's
+ * preserved in git history on this file before this commit.
+ */
+import React, { useCallback } from 'react';
 import {
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  Switch,
 } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { useTheme, typography, spacing, borderRadius } from '../../../theme';
 import { AppIcon } from '../../../components/AppIcon';
-import { useAppSelector } from '../../../store/hooks';
-import {
-  PaymentMethod,
-  selectDefaultPaymentMethod,
-} from '../../../store/slices/paymentMethods';
-import { borderRadius, spacing, useTheme } from '../../../theme';
-import { typography } from '../../../theme/typography';
-
-type DurationKey = 'daily' | 'weekly' | 'monthly';
-type TierKey = 'basic' | 'standard' | 'premium';
-
-interface Tier {
-  key: TierKey;
-  name: string;
-  speed: number;
-  features: string[];
-  recommended?: boolean;
-  prices: Record<DurationKey, number>;
-}
-
-const DURATIONS: { key: DurationKey; label: string }[] = [
-  { key: 'daily',   label: 'Daily'   },
-  { key: 'weekly',  label: 'Weekly'  },
-  { key: 'monthly', label: 'Monthly' },
-];
-
-const TIERS: Tier[] = [
-  {
-    key: 'basic',
-    name: 'Basic',
-    speed: 5,
-    features: ['Browsing & messaging', '1 device', 'Standard support'],
-    prices: { daily: 500, weekly: 2500, monthly: 8000 },
-  },
-  {
-    key: 'standard',
-    name: 'Standard',
-    speed: 10,
-    recommended: true,
-    features: ['HD streaming', '2 devices', 'Priority support'],
-    prices: { daily: 1000, weekly: 5000, monthly: 15000 },
-  },
-  {
-    key: 'premium',
-    name: 'Premium',
-    speed: 20,
-    features: ['4K streaming & gaming', 'Up to 4 devices', '24/7 support'],
-    prices: { daily: 2000, weekly: 9000, monthly: 25000 },
-  },
-];
-
-const formatPrice = (xaf: number) => `${xaf.toLocaleString('en-US')} XAF`;
-
-const paymentLabel = (m: PaymentMethod | null) => {
-  if (!m) return 'No default payment method';
-  switch (m.type) {
-    case 'orange-money': return `Orange Money · ${m.phone}`;
-    case 'mtn-momo':     return `MTN MoMo · ${m.phone}`;
-    case 'card': {
-      const last4 = m.cardNumber.replace(/\s+/g, '').slice(-4);
-      return `Card •••• ${last4}`;
-    }
-  }
-};
-
-const paymentIcon = (m: PaymentMethod | null) => {
-  if (!m) return { name: 'alert-circle', symbol: 'exclamationmark.circle' };
-  if (m.type === 'card') return { name: 'credit-card', symbol: 'creditcard' };
-  return { name: 'smartphone', symbol: 'iphone' };
-};
+import { RoleGate } from '../../../features/auth/components/RoleGate';
+import { useOrgPlans } from '../../../features/plans/hooks/useOrgPlans';
+import { useUpdatePlanMutation, useDeletePlanMutation } from '../../../features/plans/api/plansApi';
+import { useCan } from '../../../features/auth/hooks/useRbac';
+import type { Plan } from '../../../types/api';
 
 export default function PlansScreen() {
+  const { t } = useTranslation('plans');
   const { theme } = useTheme();
   const router = useRouter();
-  const defaultMethod = useAppSelector(selectDefaultPaymentMethod);
+  const { plans, isLoading, isFetching, isError, refetch, activeOrgId } = useOrgPlans();
+  const [updatePlan] = useUpdatePlanMutation();
+  const [deletePlan] = useDeletePlanMutation();
+  const canManage = useCan('manage_plans');
 
-  const [duration, setDuration] = useState<DurationKey>('daily');
-  const [confirmTier, setConfirmTier] = useState<Tier | null>(null);
+  const handleToggleActive = useCallback(
+    async (plan: Plan) => {
+      try {
+        await updatePlan({ id: plan.id, patch: { is_active: !plan.is_active } }).unwrap();
+      } catch {
+        Alert.alert(t('form.error'));
+      }
+    },
+    [updatePlan, t],
+  );
 
-  const s = useMemo(() => createStyles(theme), [theme]);
-  const icon = paymentIcon(defaultMethod);
+  const handleDelete = useCallback(
+    (plan: Plan) => {
+      Alert.alert(t('detail.deleteConfirm'), t('detail.deleteMessage'), [
+        { text: t('detail.deleteCancel'), style: 'cancel' },
+        {
+          text: t('detail.deleteOk'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deletePlan(plan.id).unwrap();
+            } catch {
+              Alert.alert(t('detail.deleteError'));
+            }
+          },
+        },
+      ]);
+    },
+    [deletePlan, t],
+  );
 
-  return (
-    <View style={s.screen}>
-      <ScrollView contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
-        <View style={s.intro}>
-          <Text style={s.headline}>Choose your PassPlan</Text>
-          <Text style={s.subline}>
-            Fast, reliable Wi-Fi without commitments. Pay only for what you need.
+  const renderItem = useCallback(
+    ({ item }: { item: Plan }) => (
+      <Pressable
+        onPress={() =>
+          canManage
+            ? router.push(`/(drawer)/subscriptions/plan-form?id=${item.id}` as any)
+            : undefined
+        }
+        style={[styles.row, { backgroundColor: theme.surface, borderColor: theme.outline }]}
+      >
+        {/* Family badge */}
+        <View
+          style={[
+            styles.familyBadge,
+            { backgroundColor: item.family === 'FPU' ? theme.primaryContainer : theme.secondaryContainer },
+          ]}
+        >
+          <Text
+            style={[
+              typography.variants.labelSmall,
+              { color: item.family === 'FPU' ? theme.primary : theme.secondary },
+            ]}
+          >
+            {item.family}
           </Text>
         </View>
 
-        <View style={s.tabs}>
-          {DURATIONS.map((d) => {
-            const active = duration === d.key;
-            return (
-              <TouchableOpacity
-                key={d.key}
-                onPress={() => setDuration(d.key)}
-                activeOpacity={0.8}
-                style={[s.tab, active && s.tabActive]}
-              >
-                <Text style={[s.tabText, active && s.tabTextActive]}>{d.label}</Text>
-              </TouchableOpacity>
-            );
-          })}
+        <View style={styles.rowMain}>
+          <Text style={[typography.variants.titleSmall, { color: theme.onSurface }]}>
+            {item.name}
+          </Text>
+          <Text style={[typography.variants.bodySmall, { color: theme.onSurfaceVariant }]}>
+            {item.price.toLocaleString()} {item.currency}
+            {item.duration ? ` / ${t(`duration.${item.duration}`)}` : ''}
+            {` · ${item.speed_cap} Mbps`}
+          </Text>
         </View>
 
-        <View style={s.tierList}>
-          {TIERS.map((tier) => (
-            <View
-              key={tier.key}
+        {canManage ? (
+          <Switch
+            value={item.is_active}
+            onValueChange={() => handleToggleActive(item)}
+            trackColor={{ true: theme.primary }}
+          />
+        ) : (
+          <View
+            style={[
+              styles.statusBadge,
+              { backgroundColor: item.is_active ? theme.primaryContainer : theme.surfaceVariant },
+            ]}
+          >
+            <Text
               style={[
-                s.tierCard,
-                tier.recommended && { borderColor: theme.primary, borderWidth: 2 },
+                typography.variants.labelSmall,
+                { color: item.is_active ? theme.primary : theme.onSurfaceVariant },
               ]}
             >
-              {tier.recommended && (
-                <View style={[s.recommendBadge, { backgroundColor: theme.primary }]}>
-                  <Text style={[s.recommendBadgeText, { color: theme.onPrimary }]}>
-                    Most popular
-                  </Text>
-                </View>
-              )}
+              {t(item.is_active ? 'status.active' : 'status.inactive')}
+            </Text>
+          </View>
+        )}
 
-              <View style={s.tierHeader}>
-                <View style={{ flex: 1 }}>
-                  <Text style={s.tierName}>{tier.name}</Text>
-                  <View style={s.speedRow}>
-                    <AppIcon
-                      type="Feather"
-                      name="zap"
-                      symbol="bolt.fill"
-                      size={13}
-                      color={theme.primary}
-                    />
-                    <Text style={s.speedText}>{tier.speed} Mbps</Text>
-                  </View>
-                </View>
-                <View style={s.priceCol}>
-                  <Text style={s.price}>{formatPrice(tier.prices[duration])}</Text>
-                  <Text style={s.priceUnit}>/ {duration}</Text>
-                </View>
-              </View>
-
-              <View style={s.divider} />
-
-              <View style={s.featureList}>
-                {tier.features.map((f) => (
-                  <View key={f} style={s.featureRow}>
-                    <AppIcon
-                      type="Feather"
-                      name="check"
-                      symbol="checkmark"
-                      size={14}
-                      color={theme.primary}
-                    />
-                    <Text style={s.featureText}>{f}</Text>
-                  </View>
-                ))}
-              </View>
-
-              <Pressable
-                onPress={() => setConfirmTier(tier)}
-                android_ripple={{ color: 'rgba(0,0,0,0.15)' }}
-                style={({ pressed }) => [
-                  s.buyBtn,
-                  {
-                    backgroundColor: tier.recommended ? theme.primary : theme.secondary,
-                    opacity: Platform.OS === 'ios' && pressed ? 0.85 : 1,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    s.buyBtnText,
-                    { color: tier.recommended ? theme.onPrimary : theme.onSurface },
-                  ]}
-                >
-                  Buy Now
-                </Text>
-              </Pressable>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-
-      <Pressable
-        onPress={() => router.push('/(drawer)/(tabs)/settings/payment-methods')}
-        android_ripple={{ color: 'rgba(0,0,0,0.08)' }}
-        style={({ pressed }) => [
-          s.payBanner,
-          { opacity: Platform.OS === 'ios' && pressed ? 0.85 : 1 },
-        ]}
-      >
-        <View style={[s.payIcon, { backgroundColor: theme.primaryContainer }]}>
-          <AppIcon type="Feather" name={icon.name} symbol={icon.symbol} size={18} color={theme.primary} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={s.payLabel}>Pay via</Text>
-          <Text style={s.payValue} numberOfLines={1}>{paymentLabel(defaultMethod)}</Text>
-        </View>
-        <AppIcon type="Feather" name="chevron-right" symbol="chevron.right" size={18} color={theme.onSurfaceVariant} />
+        {canManage ? (
+          <Pressable onPress={() => handleDelete(item)} hitSlop={8} style={styles.deleteBtn}>
+            <AppIcon type="Feather" name="trash-2" symbol="trash" size={18} color={theme.error} />
+          </Pressable>
+        ) : null}
       </Pressable>
+    ),
+    [router, theme, t, canManage, handleToggleActive, handleDelete],
+  );
 
-      <ConfirmModal
-        tier={confirmTier}
-        duration={duration}
-        method={defaultMethod}
-        onClose={() => setConfirmTier(null)}
+  if (isLoading) {
+    return (
+      <View style={[styles.center, { backgroundColor: theme.background }]}>
+        <ActivityIndicator color={theme.primary} />
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <FlatList
+        data={plans}
+        keyExtractor={(p) => p.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.listContent}
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={refetch} tintColor={theme.primary} />
+        }
+        ListEmptyComponent={
+          <Text
+            style={[
+              typography.variants.bodyMedium,
+              styles.empty,
+              { color: theme.onSurfaceVariant },
+            ]}
+          >
+            {isError
+              ? t('list.error')
+              : !activeOrgId
+                ? t('list.noActiveOrg')
+                : t('list.empty')}
+          </Text>
+        }
       />
+
+      <RoleGate action="manage_plans">
+        <Pressable
+          onPress={() => router.push('/(drawer)/subscriptions/plan-form' as any)}
+          style={[styles.fab, { backgroundColor: theme.primary }]}
+        >
+          <AppIcon type="Feather" name="plus" symbol="plus" size={20} color={theme.onPrimary} />
+          <Text style={[typography.variants.labelLarge, { color: theme.onPrimary }]}>
+            {t('list.add')}
+          </Text>
+        </Pressable>
+      </RoleGate>
     </View>
   );
 }
 
-interface ConfirmProps {
-  tier: Tier | null;
-  duration: DurationKey;
-  method: PaymentMethod | null;
-  onClose: () => void;
-}
-
-function ConfirmModal({ tier, duration, method, onClose }: ConfirmProps) {
-  const { theme } = useTheme();
-  const visible = !!tier;
-  const [stage, setStage] = useState<'confirm' | 'success'>('confirm');
-
-  const handleConfirm = () => setStage('success');
-  const handleClose = () => {
-    setStage('confirm');
-    onClose();
-  };
-
-  if (!tier) return null;
-
-  return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
-      <Pressable style={modalStyles.backdrop} onPress={handleClose} />
-      <View style={modalStyles.center} pointerEvents="box-none">
-        <View style={[modalStyles.card, { backgroundColor: theme.surface }]}>
-          {stage === 'confirm' ? (
-            <>
-              <View style={[modalStyles.icon, { backgroundColor: theme.primaryContainer }]}>
-                <AppIcon type="Feather" name="shopping-bag" symbol="bag" size={26} color={theme.primary} />
-              </View>
-              <Text style={[modalStyles.title, { color: theme.onSurface }]}>
-                Confirm purchase
-              </Text>
-              <Text style={[modalStyles.body, { color: theme.onSurfaceVariant }]}>
-                {tier.name} · {tier.speed} Mbps{'\n'}
-                {formatPrice(tier.prices[duration])} / {duration}
-              </Text>
-              <Text style={[modalStyles.payVia, { color: theme.onSurfaceVariant }]}>
-                Pay with {paymentLabel(method)}
-              </Text>
-
-              <View style={modalStyles.row}>
-                <Pressable onPress={handleClose} style={[modalStyles.btn, { borderColor: theme.outline, borderWidth: 1 }]}>
-                  <Text style={[modalStyles.btnText, { color: theme.onSurface }]}>Cancel</Text>
-                </Pressable>
-                <Pressable
-                  onPress={handleConfirm}
-                  disabled={!method}
-                  style={[
-                    modalStyles.btn,
-                    { backgroundColor: theme.primary, opacity: method ? 1 : 0.4 },
-                  ]}
-                >
-                  <Text style={[modalStyles.btnText, { color: theme.onPrimary }]}>
-                    {method ? 'Confirm' : 'No method'}
-                  </Text>
-                </Pressable>
-              </View>
-            </>
-          ) : (
-            <>
-              <View style={modalStyles.successIcon}>
-                <AppIcon type="Feather" name="check" symbol="checkmark" size={36} color="#fff" />
-              </View>
-              <Text style={[modalStyles.title, { color: theme.onSurface }]}>
-                Purchase complete!
-              </Text>
-              <Text style={[modalStyles.body, { color: theme.onSurfaceVariant }]}>
-                Your <Text style={{ fontWeight: '700', color: theme.onSurface }}>{tier.name}</Text> · {tier.speed} Mbps pass is now active.{'\n'}Enjoy your connection!
-              </Text>
-              <Pressable onPress={handleClose} style={[modalStyles.btn, { backgroundColor: '#059669', alignSelf: 'stretch' }]}>
-                <Text style={[modalStyles.btnText, { color: '#fff' }]}>Done</Text>
-              </Pressable>
-            </>
-          )}
-        </View>
-      </View>
-    </Modal>
-  );
-}
-
-const createStyles = (theme: ReturnType<typeof useTheme>['theme']) =>
-  StyleSheet.create({
-    screen: { flex: 1, backgroundColor: theme.surfaceVariant },
-    content: { padding: spacing.md, paddingBottom: 120, gap: spacing.md },
-    intro: { gap: spacing.xs },
-    headline: {
-      fontSize: typography.sizes.xl,
-      fontWeight: typography.weights.bold,
-      color: theme.onSurface,
-    },
-    subline: {
-      fontSize: typography.sizes.sm,
-      color: theme.onSurfaceVariant,
-      lineHeight: 20,
-    },
-    tabs: {
-      flexDirection: 'row',
-      backgroundColor: theme.secondary,
-      borderRadius: borderRadius.md,
-      padding: 4,
-      gap: 4,
-    },
-    tab: {
-      flex: 1,
-      height: 40,
-      borderRadius: borderRadius.sm,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    tabActive: { backgroundColor: theme.surface },
-    tabText: {
-      fontSize: typography.sizes.sm,
-      color: theme.onSurfaceVariant,
-      fontWeight: typography.weights.medium,
-    },
-    tabTextActive: {
-      color: theme.onSurface,
-      fontWeight: typography.weights.semibold,
-    },
-    tierList: { gap: spacing.md, marginTop: spacing.xs },
-    tierCard: {
-      backgroundColor: theme.surface,
-      borderRadius: borderRadius.lg,
-      borderWidth: 1,
-      borderColor: theme.outline,
-      padding: spacing.md,
-      gap: spacing.sm,
-    },
-    recommendBadge: {
-      alignSelf: 'flex-start',
-      paddingHorizontal: spacing.sm,
-      paddingVertical: 3,
-      borderRadius: borderRadius.sm,
-    },
-    recommendBadgeText: {
-      fontSize: 10,
-      fontWeight: typography.weights.bold,
-      letterSpacing: 0.4,
-      textTransform: 'uppercase',
-    },
-    tierHeader: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-    },
-    tierName: {
-      fontSize: typography.sizes.lg,
-      fontWeight: typography.weights.bold,
-      color: theme.onSurface,
-    },
-    speedRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 4,
-      marginTop: 2,
-    },
-    speedText: {
-      fontSize: typography.sizes.xs,
-      color: theme.onSurfaceVariant,
-      fontWeight: typography.weights.medium,
-    },
-    priceCol: { alignItems: 'flex-end' },
-    price: {
-      fontSize: typography.sizes.lg,
-      fontWeight: typography.weights.bold,
-      color: theme.primary,
-    },
-    priceUnit: {
-      fontSize: typography.sizes.xs,
-      color: theme.onSurfaceVariant,
-    },
-    divider: {
-      height: StyleSheet.hairlineWidth,
-      backgroundColor: theme.outline,
-    },
-    featureList: { gap: 6 },
-    featureRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-    },
-    featureText: {
-      fontSize: typography.sizes.sm,
-      color: theme.onSurface,
-    },
-    buyBtn: {
-      height: 44,
-      borderRadius: borderRadius.md,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: spacing.xs,
-    },
-    buyBtnText: {
-      fontSize: typography.sizes.md,
-      fontWeight: typography.weights.semibold,
-    },
-    payBanner: {
-      position: 'absolute',
-      bottom: 16,
-      left: spacing.md,
-      right: spacing.md,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm + 2,
-      borderRadius: borderRadius.lg,
-      backgroundColor: theme.surface,
-      borderWidth: 1,
-      borderColor: theme.outline,
-      shadowColor: '#000',
-      shadowOpacity: 0.08,
-      shadowOffset: { width: 0, height: 4 },
-      shadowRadius: 12,
-      elevation: 6,
-    },
-    payIcon: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    payLabel: {
-      fontSize: typography.sizes.xs,
-      color: theme.onSurfaceVariant,
-    },
-    payValue: {
-      fontSize: typography.sizes.sm,
-      color: theme.onSurface,
-      fontWeight: typography.weights.semibold,
-    },
-  });
-
-const modalStyles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 360,
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
-    gap: 12,
-  },
-  icon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  successIcon: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: '#059669',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#059669',
-    shadowOpacity: 0.35,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  title: { fontSize: 17, fontWeight: '700' },
-  body: { fontSize: 14, textAlign: 'center', lineHeight: 20 },
-  payVia: { fontSize: 12 },
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  listContent: { padding: spacing.md, gap: spacing.sm, paddingBottom: spacing['3xl'] },
   row: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 8,
-    alignSelf: 'stretch',
-  },
-  btn: {
-    flex: 1,
-    height: 46,
-    borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'center',
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    gap: spacing.sm,
   },
-  btnText: { fontSize: 14, fontWeight: '600' },
+  familyBadge: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+    borderRadius: borderRadius.sm,
+    minWidth: 40,
+    alignItems: 'center',
+  },
+  rowMain: { flex: 1, gap: 2 },
+  statusBadge: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+    borderRadius: borderRadius.sm,
+  },
+  deleteBtn: { padding: 4 },
+  empty: { textAlign: 'center', marginTop: spacing['2xl'], paddingHorizontal: spacing.lg },
+  fab: {
+    position: 'absolute',
+    right: spacing.lg,
+    bottom: spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    height: 48,
+    borderRadius: borderRadius.full,
+    elevation: 3,
+  },
 });

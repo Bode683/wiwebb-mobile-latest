@@ -62,6 +62,115 @@ export interface PaginatedSiteList {
   previous: string | null;
 }
 
+// ── Device types (controller/device) ─────────────────────────────────
+
+export type DeviceStatus = 'pending' | 'managed';
+
+export interface Device {
+  id: string;
+  name: string;
+  mac_address: string;
+  model: string;
+  os: string;
+  status: DeviceStatus;
+  organization: string; // UUID
+  location: string | null; // site UUID
+  created: string;
+  modified: string;
+}
+
+export interface PaginatedDeviceList {
+  results: Device[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
+// ── Plan types (subscriptions/plans) ─────────────────────────────────
+
+export type PlanFamily = 'FPU' | 'PPU';
+export type PlanDuration = 'daily' | 'weekly' | 'monthly';
+
+export interface Plan {
+  id: string;
+  name: string;
+  family: PlanFamily;
+  duration: PlanDuration | null; // null for PPU
+  speed_cap: number; // Mbps
+  device_limit: number;
+  price: number;
+  currency: string;
+  is_active: boolean;
+  organization: string; // UUID
+  created: string;
+  modified: string;
+}
+
+export interface PaginatedPlanList {
+  results: Plan[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
+// ── Payment provider types (subscriptions/payment-providers) ─────────
+
+export type ProviderKey = 'mtn-momo' | 'orange-money' | 'card';
+
+export interface PaymentProvider {
+  id: string;
+  provider: ProviderKey;
+  display_name: string;
+  enabled: boolean;
+  config: Record<string, string>;
+  organization: string; // UUID
+  created: string;
+  modified: string;
+}
+
+export interface PaginatedPaymentProviderList {
+  results: PaymentProvider[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
+// ── Order types (subscriptions/orders) ───────────────────────────────
+
+export type OrderStatus = 'pending' | 'completed' | 'failed';
+export type PaymentStatus = 'pending' | 'success' | 'failed';
+
+export interface EmbeddedPayment {
+  id: string;
+  provider: string; // PaymentProvider UUID
+  provider_name: string;
+  transaction_id: string | null;
+  status: PaymentStatus;
+  paid_at: string | null;
+}
+
+export interface Order {
+  id: string;
+  reference: string;
+  plan: string; // Plan UUID
+  plan_name: string;
+  user_email: string;
+  amount: number;
+  currency: string;
+  status: OrderStatus;
+  payment: EmbeddedPayment;
+  organization: string; // UUID
+  created: string;
+  modified: string;
+}
+
+export interface PaginatedOrderList {
+  results: Order[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
 export interface PaginatedUserList {
   results: User[];
   count: number;

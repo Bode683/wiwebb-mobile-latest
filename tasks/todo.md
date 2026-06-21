@@ -29,23 +29,23 @@ Captive portal is OUT OF SCOPE here (next effort).
 - [ ] ✋ CHECKPOINT 2 — site CRUD + gating (ON DEVICE)
 
 ## Phase 3 — Devices + adoption
-- [ ] 3.1 Mockoon: `dev1` bucket with status
-- [ ] 3.2 Devices screen + adopt action (PENDING→MANAGED)
+- [x] 3.1 Mockoon: `dev1` bucket with status (apply_devices_phase3.py; curl list + PATCH verified)
+- [x] 3.2 Devices screen + adopt action (PENDING→MANAGED): devicesApi + useOrgDevices + devices/index.tsx
 - [ ] ✋ CHECKPOINT 3 — adoption + gating
 
 ## Phase 4 — Plans (FPU/PPU) admin config
-- [ ] 4.1 Mockoon: `plan1` bucket + CRUD + public filtered view
-- [ ] 4.2 Re-scope plans.tsx: admin plan config (FPU & PPU); lift checkout UI aside for portal
+- [x] 4.1 Mockoon: `plan1` bucket + CRUD + public view (apply_plans_phase4.py; list + PATCH verified)
+- [x] 4.2 Re-scope plans.tsx: admin plan config (FPU & PPU list + toggle + delete + plan-form create/edit); checkout UI in git history for portal
 - [ ] ✋ CHECKPOINT 4 — plan config + public-view filter
 
 ## Phase 5 — Payment methods admin config
-- [ ] 5.1 Mockoon: `pay1` bucket (enabled providers + public view)
-- [ ] 5.2 NEW admin provider-config screen (separate from existing paymentMethods slice/settings screen, which is portal/end-user)
+- [x] 5.1 Mockoon: `pay1` bucket (apply_payment_providers_phase5.py; 6 entries, list + PATCH verified)
+- [x] 5.2 NEW admin payment-providers screen (paymentProvidersApi + useOrgPaymentProviders + subscriptions/payment-providers.tsx; toggle enable/disable gated manage_payment_methods; separate from existing paymentMethods slice)
 - [ ] ✋ CHECKPOINT 5 — provider enable/disable + filtering
 
 ## Phase 6 — Orders + Payments (reporting)
-- [ ] 6.1 Mockoon: `ord1` bucket (+ payments view)
-- [ ] 6.2 Orders + Payments screens wired (read-only)
+- [x] 6.1 Mockoon: `ord1` bucket (apply_orders_phase6.py; 7 orders across 2 orgs, list verified)
+- [x] 6.2 Orders + Payments screens wired (read-only): ordersApi + useOrgOrders + orders.tsx list + order-detail.tsx + payments.tsx (payment rows extracted from orders)
 - [ ] ✋ CHECKPOINT 6 — final admin-plane demo, hand off to portal
 
 ## Resolved decisions

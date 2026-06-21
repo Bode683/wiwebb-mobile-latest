@@ -53,9 +53,10 @@ export const mobileNavConfig: MobileNavItem[] = [
     name: 'credit-card',
     symbol: 'creditcard',
     children: [
-      { labelKey: 'nav.plans',    type: 'Feather', name: 'layers',       symbol: 'square.3.layers.3d',  href: '/subscriptions/plans', requires: 'manage_plans' },
-      { labelKey: 'nav.orders',   type: 'Feather', name: 'shopping-bag', symbol: 'bag',                 href: '/subscriptions/orders' },
-      { labelKey: 'nav.payments', type: 'Feather', name: 'dollar-sign',  symbol: 'banknote',            href: '/subscriptions/payments' },
+      { labelKey: 'nav.plans',            type: 'Feather', name: 'layers',       symbol: 'square.3.layers.3d',  href: '/subscriptions/plans',             requires: 'manage_plans' },
+      { labelKey: 'nav.paymentProviders', type: 'Feather', name: 'credit-card',  symbol: 'creditcard',          href: '/subscriptions/payment-providers', requires: 'manage_payment_methods' },
+      { labelKey: 'nav.orders',           type: 'Feather', name: 'shopping-bag', symbol: 'bag',                 href: '/subscriptions/orders' },
+      { labelKey: 'nav.payments',         type: 'Feather', name: 'dollar-sign',  symbol: 'banknote',            href: '/subscriptions/payments' },
     ],
   },
   {

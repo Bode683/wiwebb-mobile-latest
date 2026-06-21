@@ -1,0 +1,22 @@
+{
+  "list": {
+    "title": "Payment Providers",
+    "empty": "No payment providers configured for this organization.",
+    "noActiveOrg": "Select an organization to manage its payment providers.",
+    "error": "Couldn't load payment providers.",
+    "selectOrg": "Select organization"
+  },
+  "provider": {
+    "mtn-momo": "MTN MoMo",
+    "orange-money": "Orange Money",
+    "card": "Credit / Debit Card"
+  },
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "toggleError": "Couldn't update provider.",
+  "form": {
+    "providerKey": "Provider",
+    "credentials": "Credentials",
+    "save": "Save"
+  }
+}

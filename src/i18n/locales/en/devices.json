@@ -1,0 +1,20 @@
+{
+  "list": {
+    "title": "Devices",
+    "empty": "No devices in this organization yet.",
+    "noActiveOrg": "Select an organization to view its devices.",
+    "error": "Couldn't load devices."
+  },
+  "status": {
+    "pending": "Pending",
+    "managed": "Managed"
+  },
+  "adopt": {
+    "button": "Adopt",
+    "confirm": "Adopt this device?",
+    "message": "This will mark the device as managed.",
+    "ok": "Adopt",
+    "cancel": "Cancel",
+    "error": "Couldn't adopt the device."
+  }
+}

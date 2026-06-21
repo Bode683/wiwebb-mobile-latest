@@ -1,0 +1,20 @@
+{
+  "list": {
+    "title": "Appareils",
+    "empty": "Aucun appareil dans cette organisation.",
+    "noActiveOrg": "Sélectionnez une organisation pour voir ses appareils.",
+    "error": "Impossible de charger les appareils."
+  },
+  "status": {
+    "pending": "En attente",
+    "managed": "Géré"
+  },
+  "adopt": {
+    "button": "Adopter",
+    "confirm": "Adopter cet appareil ?",
+    "message": "Ceci marquera l'appareil comme géré.",
+    "ok": "Adopter",
+    "cancel": "Annuler",
+    "error": "Impossible d'adopter l'appareil."
+  }
+}

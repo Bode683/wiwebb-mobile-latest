@@ -1,0 +1,22 @@
+{
+  "list": {
+    "title": "Moyens de paiement",
+    "empty": "Aucun prestataire de paiement configuré pour cette organisation.",
+    "noActiveOrg": "Sélectionnez une organisation pour gérer ses prestataires.",
+    "error": "Impossible de charger les prestataires de paiement.",
+    "selectOrg": "Sélectionner une organisation"
+  },
+  "provider": {
+    "mtn-momo": "MTN MoMo",
+    "orange-money": "Orange Money",
+    "card": "Carte bancaire"
+  },
+  "enabled": "Activé",
+  "disabled": "Désactivé",
+  "toggleError": "Impossible de mettre à jour le prestataire.",
+  "form": {
+    "providerKey": "Prestataire",
+    "credentials": "Identifiants",
+    "save": "Enregistrer"
+  }
+}
