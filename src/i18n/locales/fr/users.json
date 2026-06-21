@@ -1,0 +1,51 @@
+{
+  "list": {
+    "title": "Utilisateurs",
+    "empty": "Aucun utilisateur dans cette organisation pour le moment.",
+    "noActiveOrg": "Sélectionnez une organisation pour voir ses utilisateurs.",
+    "invite": "Inviter un utilisateur",
+    "error": "Impossible de charger les utilisateurs."
+  },
+  "status": {
+    "active": "Actif",
+    "pending": "Invitation en attente"
+  },
+  "role": {
+    "super_admin": "Super administrateur",
+    "super_admin_delegate": "Délégué super administrateur",
+    "admin": "Administrateur",
+    "viewer": "Lecteur"
+  },
+  "invite": {
+    "title": "Inviter un utilisateur",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "personne@exemple.com",
+    "roleLabel": "Rôle",
+    "submit": "Envoyer l'invitation",
+    "success": "Invitation envoyée.",
+    "error": "Impossible d'envoyer l'invitation.",
+    "invalidEmail": "Saisissez une adresse e-mail valide."
+  },
+  "detail": {
+    "title": "Utilisateur",
+    "roleLabel": "Rôle",
+    "changeRole": "Changer de rôle",
+    "roleUpdated": "Rôle mis à jour.",
+    "roleError": "Impossible de mettre à jour le rôle.",
+    "resend": "Renvoyer l'invitation",
+    "resent": "Invitation renvoyée."
+  },
+  "accept": {
+    "title": "Accepter l'invitation",
+    "subtitle": "Définissez un mot de passe pour activer votre compte.",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Choisissez un mot de passe",
+    "confirmLabel": "Confirmer le mot de passe",
+    "submit": "Activer le compte",
+    "success": "Votre compte est actif. Vous pouvez maintenant vous connecter.",
+    "invalid": "Ce lien d'invitation est invalide ou a expiré.",
+    "mismatch": "Les mots de passe ne correspondent pas.",
+    "tooShort": "Le mot de passe doit comporter au moins 8 caractères.",
+    "error": "Impossible d'activer le compte."
+  }
+}

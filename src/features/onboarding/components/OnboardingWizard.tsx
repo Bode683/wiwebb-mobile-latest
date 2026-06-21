@@ -8,9 +8,13 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAppDispatch } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { spacing, useTheme } from "../../../theme";
 import { completeOnboarding, saveOnboardingResult } from "../slice/onboardingSlice";
+import { useCreateOrganizationMutation } from "../../organizations/api/organizationApi";
+import { setActiveOrganization } from "../../organizations/slice/organizationSlice";
+import { addOrganizationMembership, selectUser } from "../../auth/slice/authSlice";
+import { uuid } from "../../users/utils/ids";
 import { ProgressBar } from "./ProgressBar";
 import { ActivationStep } from "./steps/ActivationStep";
 import { ConfigStep } from "./steps/ConfigStep";
@@ -44,6 +48,8 @@ const ANIM_IN_MS = 200;
 
 export function OnboardingWizard() {
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const [createOrganization] = useCreateOrganizationMutation();
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -75,6 +81,45 @@ export function OnboardingWizard() {
     [opacity, offsetX],
   );
 
+  /**
+   * Create the tenant on the backend, then make it the user's first membership
+   * and the active org. Until the org POST exists the wizard stays local; the
+   * mock now provides it, so a real org is created here.
+   */
+  const createTenant = useCallback(
+    async (orgName: string) => {
+      const slug =
+        orgName
+          .trim()
+          .replace(/[^a-zA-Z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+          .toLowerCase() || 'tenant';
+      try {
+        const org = await createOrganization({
+          id: uuid(),
+          name: orgName.trim() || 'Organization',
+          slug,
+          is_active: true,
+          description: '',
+          email: user?.email ?? '',
+        }).unwrap();
+        // The creator owns + administers the new tenant.
+        dispatch(
+          addOrganizationMembership({
+            organization: org.id,
+            is_admin: true,
+            is_owner: true,
+          }),
+        );
+        dispatch(setActiveOrganization(org.id));
+      } catch {
+        // Onboarding still completes locally if the backend is unreachable;
+        // active org simply stays unchanged.
+      }
+    },
+    [createOrganization, dispatch, user],
+  );
+
   const handleNext = useCallback(
     (stepData?: Record<string, any>) => {
       const merged = stepData ? { ...wizardData, ...stepData } : wizardData;
@@ -93,13 +138,15 @@ export function OnboardingWizard() {
             vlanId: merged.vlanId ?? null,
           }),
         );
-        dispatch(completeOnboarding());
+        void createTenant(merged.orgName ?? '').finally(() => {
+          dispatch(completeOnboarding());
+        });
       } else {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         animateTransition(currentStep + 1, true);
       }
     },
-    [currentStep, dispatch, animateTransition, wizardData],
+    [currentStep, dispatch, animateTransition, wizardData, createTenant],
   );
 
   const handleBack = useCallback(() => {

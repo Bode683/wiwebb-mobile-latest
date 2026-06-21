@@ -1,0 +1,51 @@
+{
+  "list": {
+    "title": "Users",
+    "empty": "No users in this organization yet.",
+    "noActiveOrg": "Select an organization to view its users.",
+    "invite": "Invite user",
+    "error": "Couldn't load users."
+  },
+  "status": {
+    "active": "Active",
+    "pending": "Pending invitation"
+  },
+  "role": {
+    "super_admin": "Super Admin",
+    "super_admin_delegate": "Super Admin Delegate",
+    "admin": "Admin",
+    "viewer": "Viewer"
+  },
+  "invite": {
+    "title": "Invite user",
+    "emailLabel": "Email",
+    "emailPlaceholder": "person@example.com",
+    "roleLabel": "Role",
+    "submit": "Send invitation",
+    "success": "Invitation sent.",
+    "error": "Couldn't send the invitation.",
+    "invalidEmail": "Enter a valid email address."
+  },
+  "detail": {
+    "title": "User",
+    "roleLabel": "Role",
+    "changeRole": "Change role",
+    "roleUpdated": "Role updated.",
+    "roleError": "Couldn't update the role.",
+    "resend": "Resend invitation",
+    "resent": "Invitation resent."
+  },
+  "accept": {
+    "title": "Accept invitation",
+    "subtitle": "Set a password to activate your account.",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Choose a password",
+    "confirmLabel": "Confirm password",
+    "submit": "Activate account",
+    "success": "Your account is active. You can now log in.",
+    "invalid": "This invitation link is invalid or has expired.",
+    "mismatch": "Passwords don't match.",
+    "tooShort": "Password must be at least 8 characters.",
+    "error": "Couldn't activate the account."
+  }
+}
